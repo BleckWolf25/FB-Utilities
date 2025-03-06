@@ -1,0 +1,71 @@
+/* eslint-disable */
+/* stylelint-disable */
+
+/* main.css */
+
+/* Import your variables */
+@import '../../styles/variables.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Basic reset - Makes sure all browsers start with the same styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--main-font);
+  font-size: var(--font-size-base);
+  color: var(--text-color);
+  background-color: var(--background-color);
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+  font-family: var(--heading-font);
+  margin-bottom: var(--spacing-medium);
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+  font-family: var(--heading-font);
+  margin-bottom: var(--spacing-medium);
+}
+
+/* Example button style */
+.button {
+  background-color: var(--primary-color);
+  color: var(--text-color-white);
+  padding: var(--spacing-medium) var(--spacing-large);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: var(--font-size-base);
+}
+
+.button:hover {
+  background-color: var(--primary-color-dark);
+}
+
+/* Example card style */
+.card {
+  background-color: white;
+  border-radius: 8px;
+  padding: var(--spacing-large);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Example dark mode styles */
+body.dark-mode {
+    background-color: var(--background-color-dark);
+    color: var(--text-color-white);
+}
+
+body.dark-mode .card {
+    background-color: #222;
+    color: var(--text-color-white);
+}

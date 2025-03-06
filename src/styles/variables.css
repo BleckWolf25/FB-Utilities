@@ -1,0 +1,35 @@
+/* variables.css */
+
+:root {
+  /* Colors - Pick a main color and some variations */
+  --primary-color: #2979ff; /* A nice blue, like Framer uses */
+  --primary-color-light: #64b5f6;
+  --primary-color-dark: #1976d2;
+
+  --background-color: #f9f9f9; /* Light background */
+  --background-color-dark: #121212; /* Dark background */
+
+  --text-color: #333; /* Dark gray for most text */
+  --text-color-light: #666; /* Lighter gray for secondary text */
+  --text-color-white: #fff; /* White text */
+
+  --border-color: #ddd; /* Light gray for borders */
+
+  /* Fonts - Choose a clean and readable font */
+  --main-font: "Inter", sans-serif; /* Inter is a popular and modern font */
+  --heading-font:
+    "Inter", sans-serif; /* You can use the same or a different font for headings */
+
+  /* Font Sizes - Use a consistent scale */
+  --font-size-base: 16px;
+  --font-size-small: 14px;
+  --font-size-large: 20px;
+  --font-size-h1: 36px;
+  --font-size-h2: 30px;
+  --font-size-h3: 24px;
+
+  /* Spacing - Use a consistent spacing scale */
+  --spacing-small: 8px;
+  --spacing-medium: 16px;
+  --spacing-large: 24px;
+}

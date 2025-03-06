@@ -1,6 +1,7 @@
-export const plugins = {
-  tailwindcss: {},
-  autoprefixer: {},
-  ...(process.env.NODE_ENV === 'production' ? { cssnano: {} } : {}),
+export default {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+    ...(process.env.NODE_ENV === 'production' ? { cssnano: {} } : {})
+  }
 };
-  

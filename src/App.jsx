@@ -1,13 +1,16 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './pages/Home';
+// src/App.jsx
+import React from 'react';
+import AppRoutes from './routes/AppRoutes';
 
+// App component is now primarily responsible for initializing the router and any global context providers or configurations
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />q
-      </Routes>
-    </Router>
+    // You could wrap AppRoutes with context providers here
+    // <SomeContextProvider>
+    //   <AnotherContextProvider>
+    <AppRoutes />
+    //   </AnotherContextProvider>
+    // </SomeContextProvider>
   );
 }
 
