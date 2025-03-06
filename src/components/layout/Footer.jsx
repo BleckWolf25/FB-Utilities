@@ -16,39 +16,26 @@ const Footer = () => {
   // Footer navigation sections
   const footerSections = [
     {
-      title: 'Product',
-      links: [
-        { label: 'Features', to: '/features' },
-        { label: 'Pricing', to: '/pricing' },
-        { label: 'Integrations', to: '/integrations' },
-        { label: 'Changelog', to: '/changelog' },
-      ]
-    },
-    {
       title: 'Resources',
       links: [
-        { label: 'Documentation', to: '/docs' },
+/*      { label: 'Documentation', to: '/docs' },
         { label: 'Tutorials', to: '/tutorials' },
         { label: 'Blog', to: '/blog' },
-        { label: 'Community', href: 'https://community.example.com' },
+        { label: 'Community', href: 'https://community.example.com' }, */
       ]
     },
     {
-      title: 'Company',
+      title: 'FB-Utilities',
       links: [
         { label: 'About', to: '/about' },
-        { label: 'Careers', to: '/careers' },
         { label: 'Contact', to: '/contact' },
-        { label: 'Media Kit', to: '/media-kit' },
       ]
     },
     {
-      title: 'Legal',
+      title: 'ToS',
       links: [
-        { label: 'Terms', to: '/terms' },
-        { label: 'Privacy', to: '/privacy' },
-        { label: 'Cookies', to: '/cookies' },
-        { label: 'Licenses', to: '/licenses' },
+        { label: 'Terms of Service', to: '/terms' },
+        { label: 'Privacy Policy', to: '/privacy' },
       ]
     },
   ];
@@ -86,41 +73,38 @@ const Footer = () => {
   ];
   
   return (
-    <footer className="bg-white border-t border-gray-200">
+    <footer className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
       {/* Main Footer Content */}
       <div className="container mx-auto px-4 py-12 md:py-16">
         <div className="grid grid-cols-1 md:grid-cols-6 gap-8">
-          {/* Brand and Newsletter Section */}
+          {/* Brand Section */}
           <div className="md:col-span-2">
-            {/* Logo */}
             <div className="flex items-center mb-6">
-              <svg 
-                className="h-8 w-8 text-indigo-600" 
-                viewBox="0 0 24 24" 
-                fill="currentColor"
-              >
+              <svg className="h-8 w-8 text-indigo-600 dark:text-indigo-400">
                 <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
               </svg>
-              <span className="ml-2 text-xl font-bold text-gray-900">FB-Utilities</span>
+              <span className="ml-2 text-xl font-bold text-gray-900 dark:text-gray-100">FB-Utilities</span>
             </div>
             
             {/* Description */}
-            <p className="text-gray-600 mb-6">
+            <p className="text-gray-600 dark:text-gray-400 mb-6">
               Tools and components to build beautiful interfaces with speed and precision.
             </p>
             
             {/* Newsletter Signup */}
             <div className="mb-6">
-              <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3">
-                Subscribe to our newsletter
+              <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-300 uppercase tracking-wider mb-3">
+                Stay updated
               </h3>
               <div className="flex flex-col sm:flex-row gap-2">
                 <input
                   type="email"
                   placeholder="Enter your email"
-                  className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 flex-grow"
+                  className="px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg 
+                    focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 
+                    bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                 />
-                <Button>Subscribe</Button>
+                <Button variant="outline">Subscribe</Button>
               </div>
             </div>
           </div>
@@ -129,7 +113,7 @@ const Footer = () => {
           <div className="md:col-span-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
             {footerSections.map((section, index) => (
               <div key={index}>
-                <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-300 uppercase tracking-wider mb-4">
                   {section.title}
                 </h3>
                 <ul className="space-y-3">
@@ -138,14 +122,14 @@ const Footer = () => {
                       {link.to ? (
                         <Link 
                           to={link.to} 
-                          className="text-gray-600 hover:text-indigo-600 transition-colors"
+                          className="text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                         >
                           {link.label}
                         </Link>
                       ) : (
                         <a 
                           href={link.href} 
-                          className="text-gray-600 hover:text-indigo-600 transition-colors"
+                          className="text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                           target="_blank"
                           rel="noopener noreferrer"
                         >
@@ -162,24 +146,21 @@ const Footer = () => {
       </div>
       
       {/* Bottom Bar with Copyright and Social Links */}
-      <div className="border-t border-gray-200">
+      <div className="border-t border-gray-200 dark:border-gray-800">
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-            {/* Copyright */}
-            <div className="text-gray-500 text-sm mb-4 md:mb-0">
+            <div className="text-gray-500 dark:text-gray-400 text-sm mb-4 md:mb-0">
               © {currentYear} FB-Utilities. All rights reserved.
             </div>
             
-            {/* Social Links */}
             <div className="flex space-x-6">
               {socialLinks.map((social, index) => (
                 <a
                   key={index}
                   href={social.href}
-                  className="text-gray-500 hover:text-indigo-600 transition-colors"
+                  className="text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label={`${social.name} page`}
                 >
                   {social.icon}
                 </a>

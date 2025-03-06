@@ -50,7 +50,7 @@ const NavButton = ({
   const buttonClasses = `
     relative px-4 py-2 text-base font-medium transition-all duration-200
     rounded-lg group inline-flex items-center justify-center
-    ${isActive ? 'text-indigo-700' : 'text-gray-700 hover:text-indigo-700'}
+    ${isActive ? 'text-indigo-700 dark:text-indigo-400' : 'text-gray-700 dark:text-gray-300 hover:text-indigo-700 dark:hover:text-indigo-400'}
     ${hasDropdown ? 'pr-8' : ''} 
     ${className}
   `;
@@ -60,7 +60,7 @@ const NavButton = ({
     <span className="absolute inset-0 w-full h-full rounded-lg bg-indigo-100/0 group-hover:bg-indigo-100/80 transition-all duration-200"></span>
   );
 
-  // Dropdown arrow if needed
+  // Dropdown arrow
   const DropdownArrow = () => (
     hasDropdown && (
       <svg 
@@ -74,17 +74,17 @@ const NavButton = ({
     )
   );
 
-  // Dropdown menu if needed
+  // Dropdown menu
   const Dropdown = () => (
     hasDropdown && isDropdownOpen && (
-      <div className="absolute left-0 top-full mt-1 w-48 bg-white rounded-lg shadow-lg overflow-hidden z-10 border border-gray-200">
+      <div className="absolute left-0 top-full mt-1 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden z-10 border border-gray-200 dark:border-gray-700 transition-opacity duration-200">
         <ul className="py-1">
           {dropdownItems.map((item, index) => (
             <li key={index}>
               {item.to ? (
                 <Link 
                   to={item.to} 
-                  className="block px-4 py-2 text-gray-700 hover:bg-indigo-50 hover:text-indigo-700"
+                  className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-indigo-50 dark:hover:bg-indigo-900/50 transition-colors duration-200"
                   onClick={() => setIsDropdownOpen(false)}
                 >
                   {item.label}
@@ -92,10 +92,8 @@ const NavButton = ({
               ) : (
                 <a 
                   href={item.href} 
-                  className="block px-4 py-2 text-gray-700 hover:bg-indigo-50 hover:text-indigo-700"
+                  className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-indigo-50 dark:hover:bg-indigo-900/50 transition-colors duration-200"
                   onClick={() => setIsDropdownOpen(false)}
-                  target={item.external ? "_blank" : undefined}
-                  rel={item.external ? "noopener noreferrer" : undefined}
                 >
                   {item.label}
                 </a>

@@ -69,3 +69,14 @@ body.dark-mode .card {
     background-color: #222;
     color: var(--text-color-white);
 }
+
+.animate-ripple {
+  animation: ripple-animation 600ms linear;
+}
+
+@keyframes ripple-animation {
+  to {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+  }
+}

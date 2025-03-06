@@ -1,35 +1,100 @@
-/* variables.css */
-
+/* src/styles/variables.css */
 :root {
-  /* Colors - Pick a main color and some variations */
-  --primary-color: #2979ff; /* A nice blue, like Framer uses */
-  --primary-color-light: #64b5f6;
-  --primary-color-dark: #1976d2;
+  /* ===== Color System ===== */
+  /* Base Colors */
+  --background: #ffffff;
+  --surface: #f8f9fa;
+  --surface-hover: #f1f3f5;
+  --text-primary: #0f0f0f;
+  --text-secondary: #525252;
+  --border: #e9ecef;
 
-  --background-color: #f9f9f9; /* Light background */
-  --background-color-dark: #121212; /* Dark background */
+  /* Primary Colors */
+  --primary-50: #f0f5ff;
+  --primary-100: #dbe7fe;
+  --primary-200: #bdd3fe;
+  --primary-300: #91b6fd;
+  --primary-400: #6090fa;
+  --primary-500: #3b6ff5;
+  --primary-600: #2454eb;
+  --primary-700: #1d45d8;
+  --primary-800: #1f3aae;
+  --primary-900: #1f3389;
 
-  --text-color: #333; /* Dark gray for most text */
-  --text-color-light: #666; /* Lighter gray for secondary text */
-  --text-color-white: #fff; /* White text */
+  /* Accent Colors */
+  --accent-purple: #8a63d2;
+  --accent-pink: #ff70cf;
+  --accent-cyan: #00d3d4;
 
-  --border-color: #ddd; /* Light gray for borders */
+  /* State Colors */
+  --success: #00c853;
+  --warning: #ffab00;
+  --error: #d32f2f;
 
-  /* Fonts - Choose a clean and readable font */
-  --main-font: "Inter", sans-serif; /* Inter is a popular and modern font */
-  --heading-font:
-    "Inter", sans-serif; /* You can use the same or a different font for headings */
+  /* ===== Typography ===== */
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
 
-  /* Font Sizes - Use a consistent scale */
-  --font-size-base: 16px;
-  --font-size-small: 14px;
-  --font-size-large: 20px;
-  --font-size-h1: 36px;
-  --font-size-h2: 30px;
-  --font-size-h3: 24px;
+  --text-base: 1rem; /* 16px */
+  --text-sm: 0.875rem; /* 14px */
+  --text-lg: 1.125rem; /* 18px */
 
-  /* Spacing - Use a consistent spacing scale */
-  --spacing-small: 8px;
-  --spacing-medium: 16px;
-  --spacing-large: 24px;
+  --heading-1: 3rem; /* 48px */
+  --heading-2: 2rem; /* 32px */
+  --heading-3: 1.5rem; /* 24px */
+
+  /* ===== Spacing ===== */
+  --space-xs: 0.25rem; /* 4px */
+  --space-sm: 0.5rem; /* 8px */
+  --space-md: 1rem; /* 16px */
+  --space-lg: 1.5rem; /* 24px */
+  --space-xl: 2rem; /* 32px */
+
+  /* ===== Borders ===== */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 9999px;
+
+  /* ===== Transitions ===== */
+  --transition-duration: 0.2s;
+  --transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ===== Shadows ===== */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Dark Theme */
+.dark {
+  --background: #0f0f0f;
+  --surface: #1a1a1a;
+  --surface-hover: #262626;
+  --text-primary: #ffffff;
+  --text-secondary: #a3a3a3;
+  --border: #333333;
+
+  --primary-50: #090d1a;
+  --primary-100: #121834;
+  --primary-200: #202854;
+  --primary-300: #313d72;
+  --primary-400: #3f4b89;
+  --primary-500: #5463ad;
+  --primary-600: #6975c2;
+  --primary-700: #818bdd;
+  --primary-800: #99a0e9;
+  --primary-900: #cacdff;
+
+  --accent-purple: #9d7ae8;
+  --accent-pink: #ff8dd1;
+  --accent-cyan: #00f0f0;
+
+  --success: #00e676;
+  --warning: #ffc400;
+  --error: #ff5252;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.24);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.32);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.4);
 }

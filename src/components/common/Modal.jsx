@@ -85,15 +85,16 @@ const Modal = ({
           ref={modalRef}
           className={`
             ${sizeClasses[size] || sizeClasses.md}
-            w-full bg-white dark:bg-gray-800 rounded-xl shadow-xl overflow-hidden
+            w-full bg-white dark:bg-gray-900 rounded-xl shadow-xl overflow-hidden
             flex flex-col max-h-[90vh] ${className}
+            transition-colors duration-200
           `}
         >
           {/* Modal header */}
           {(title || showCloseButton) && (
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
               {title && (
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
                   {title}
                 </h3>
               )}
@@ -101,7 +102,7 @@ const Modal = ({
               {showCloseButton && (
                 <button
                   onClick={onClose}
-                  className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-full p-1"
+                  className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors duration-200"
                   aria-label="Close"
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -113,9 +114,9 @@ const Modal = ({
           )}
           
           {/* Modal content */}
-          <div className="p-6 overflow-y-auto">{children}</div>
-          
-          {/* Modal footer slot could be added here if needed */}
+          <div className="p-6 overflow-y-auto">{children}
+            {children} 
+          </div>
         </div>
       </FadeIn>
     </div>,

@@ -10,7 +10,7 @@ import Footer from '../components/layout/Footer';
 import Home from '../pages/Home';
 // import About from '../pages/About';
 // import Contact from '../pages/Contact';
-// import NotFound from '../pages/NotFound';
+import NotFound from '../pages/NotFound';
 
 // Layout wrapper component that includes navbar and footer
 const MainLayout = ({ children }) => (

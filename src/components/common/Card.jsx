@@ -42,10 +42,10 @@ const Card = ({
   
   // Variant specific classes
   const variantClasses = {
-    default: "bg-white border border-gray-200",
-    elevated: "bg-white shadow-lg",
-    outlined: "bg-transparent border border-gray-300",
-    interactive: "bg-white border border-gray-200 hover:border-indigo-300 hover:shadow-md transition-all duration-200",
+    default: "bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700",
+    elevated: "bg-white dark:bg-gray-900 shadow-lg dark:shadow-gray-800/50",
+    outlined: "bg-transparent border border-gray-300 dark:border-gray-600",
+    interactive: "bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 hover:border-indigo-300 dark:hover:border-indigo-500 hover:shadow-md transition-all duration-200",
   };
   
   // Interactive props
@@ -80,21 +80,18 @@ const Card = ({
       
       {/* Card Body */}
       <div className="p-5">
-        {/* Title and Subtitle */}
         {(title || subtitle) && (
           <div className="mb-4">
-            {title && <h3 className="text-xl font-semibold text-gray-900 mb-1">{title}</h3>}
-            {subtitle && <p className="text-gray-600">{subtitle}</p>}
+            {title && <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-1">{title}</h3>}
+            {subtitle && <p className="text-gray-600 dark:text-gray-400">{subtitle}</p>}
           </div>
         )}
-        
-        {/* Main Content */}
-        <div className="text-gray-700">{children}</div>
+        <div className="text-gray-700 dark:text-gray-300">{children}</div>
       </div>
       
       {/* Card Footer */}
       {footer && (
-        <div className="px-5 py-4 bg-gray-50 border-t border-gray-200">
+        <div className="px-5 py-4 bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
           {footer}
         </div>
       )}

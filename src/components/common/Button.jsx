@@ -44,24 +44,25 @@ const Button = ({
   
   // Variant specific classes
   const variantClasses = {
-    primary: `bg-indigo-600 hover:bg-indigo-700 text-white 
+    primary: `bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-800 text-white 
               focus:ring-indigo-500 active:bg-indigo-800 
-              shadow-sm hover:shadow`,
+              shadow-sm hover:shadow transition-colors duration-200`,
               
-    secondary: `bg-gray-100 hover:bg-gray-200 text-gray-800 
+    secondary: `bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200
                 focus:ring-gray-300 active:bg-gray-300 
-                shadow-sm hover:shadow`,
+                shadow-sm hover:shadow transition-colors duration-200`,
                 
-    outline: `border border-indigo-600 text-indigo-600 hover:bg-indigo-50 
-              focus:ring-indigo-500 active:bg-indigo-100`,
+    outline: `border border-indigo-600 dark:border-indigo-500 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/50 
+              focus:ring-indigo-500 active:bg-indigo-100 transition-colors duration-200`,
               
-    ghost: `bg-transparent text-indigo-600 hover:bg-indigo-50 
-            focus:ring-indigo-500 active:bg-indigo-100`,
+    ghost: `bg-transparent text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/50 
+            focus:ring-indigo-500 active:bg-indigo-100 transition-colors duration-200`,
             
-    link: `bg-transparent text-indigo-600 hover:text-indigo-800 
+    link: `bg-transparent text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 
            underline-offset-2 hover:underline focus:ring-indigo-500 
-           p-0 shadow-none`
+           p-0 shadow-none transition-colors duration-200`
   };
+
   
   // Disabled classes
   const disabledClasses = "opacity-50 cursor-not-allowed pointer-events-none";
