@@ -16,7 +16,7 @@ my-project/
 │   ├── components/                  # Reusable UI components
 │   │   ├── common/                  # Common elements (Button, Card, Modal, etc.)
 │   │   ├── layout/                  # Layout components (Header, Footer, Navbar, etc.)
-│   │   └── animations/              # Animation wrappers or motion components (e.g., Framer Motion)
+│   │   └── animations/              # Animation wrappers or motion components
 │   ├── context/                     # React Context providers (global state, themes, etc.)
 │   ├── hooks/                       # Custom hooks for reusability (e.g., useAuth, useFetch)
 │   ├── pages/                       # Page-level components for routing (each file represents a page)
@@ -27,6 +27,7 @@ my-project/
 │   │   └── AppRoutes.jsx
 │   ├── styles/                      # Additional global styles or Tailwind overrides
 │   │   └── variables.css
+│   ├── web_workers/                 # Web workers for complex tasks - to ensure performance
 │   ├── App.jsx                      # Root component (handles layout, global providers, etc.)
 │   └── main.jsx                     # Entry point (renders application into the DOM)
 ├── .eslintrc.js                     # ESLint configuration for code quality
