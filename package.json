@@ -15,7 +15,7 @@
     "text",
     "image"
   ],
-  "homepage": "https://fb-utilities.com",
+  "homepage": "https://fb-utilities.vercel.app",
   "bugs": {
     "url": "https://github.com/BleckWolf25/fb-utilities/issues"
   },
@@ -32,7 +32,7 @@
     }
   ],
   "type": "module",
-  "main": "/src/api/server.js",
+  "main": "/src/App.jsx",
   "scripts": {
     "test": "jest",
     "dev": "vite --host",
