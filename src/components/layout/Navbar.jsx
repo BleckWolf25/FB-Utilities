@@ -17,21 +17,19 @@ const Navbar = () => {
       to: '/',
     },
     { 
-      label: 'About', 
-      to: '/about',
+      label: 'Coding', 
+      to: '/coding',
       hasDropdown: true,
       dropdownItems: [
-        { label: 'About', to: '/about' },
-        { label: 'Features', to: '/features' },
+        { label: 'Minifier', to: '/minifier' },
+        { label: 'unMinifier ', to: '/features' },
       ]
     },
     { 
-      label: 'Resources', 
+      label: 'File Related', 
       hasDropdown: true,
       dropdownItems: [
-/*      { label: 'Documentation', to: '/docs' },
-        { label: 'Blog', to: '/blog' },
-        { label: 'Community', href: 'https://community.example.com', external: true } */
+     { label: 'Converter', to: '/converter' }
       ]
     },
   ];
@@ -78,7 +76,7 @@ const Navbar = () => {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-1">
+          <nav className="hidden md:flex items-center ">
             {navItems.map((item, index) => (
               <NavButton
                 key={index}
@@ -173,12 +171,12 @@ const Navbar = () => {
                 </Link>
                 
                 {item.hasDropdown && (
-                  <div className="pl-6 mt-1 space-y-1">
+                  <div className="pl-5 mt-1 space-y-1">
                     {item.dropdownItems.map((dropdownItem, dropdownIndex) => (
                       <Link 
                         key={dropdownIndex}
                         to={dropdownItem.to || dropdownItem.href || '#'} 
-                        className="block px-3 py-2 text-base font-medium text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300"
+                        className="block pl-5 py-2 text-base font-medium text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300"
                         target={dropdownItem.external ? "_blank" : undefined}
                         rel={dropdownItem.external ? "noopener noreferrer" : undefined}
                       >
