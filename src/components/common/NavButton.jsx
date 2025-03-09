@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 /**
  * NavButton Component
  * 
- * A specialized button for navigation with hover effects similar to Framer's website.
+ * A specialized button for navigation with hover effects.
  * Features a subtle background expansion animation and optional dropdown functionality.
  * 
  * Props:
@@ -49,9 +49,8 @@ const NavButton = ({
   // Shared button appearance
   const buttonClasses = `
     relative px-4 py-2 text-base font-medium transition-all duration-200
-    rounded-lg group inline-flex items-center justify-center
+    rounded-lg group inline-flex items-center
     ${isActive ? 'text-indigo-700 dark:text-indigo-400' : 'text-gray-700 dark:text-gray-300 hover:text-indigo-700 dark:hover:text-indigo-400'}
-    ${hasDropdown ? 'pr-8' : ''} 
     ${className}
   `;
 
@@ -64,7 +63,7 @@ const NavButton = ({
   const DropdownArrow = () => (
     hasDropdown && (
       <svg 
-        className={`ml-1 w-4 h-4 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} 
+        className={`ml-1 h-4 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} 
         fill="none" 
         stroke="currentColor" 
         viewBox="0 0 24 24"
@@ -122,8 +121,8 @@ const NavButton = ({
           }}
         >
           <ButtonBackground />
-          <span className="relative z-10 flex items-center">
-            {children}
+          <span className="relative z-10 flex items-center justify-between w-full">
+            <span>{children}</span>
             <DropdownArrow />
           </span>
         </Link>
@@ -148,8 +147,8 @@ const NavButton = ({
           }}
         >
           <ButtonBackground />
-          <span className="relative z-10 flex items-center">
-            {children}
+          <span className="relative z-10 flex items-center justify-between w-full">
+            <span>{children}</span>
             <DropdownArrow />
           </span>
         </a>
@@ -168,8 +167,8 @@ const NavButton = ({
           }}
         >
           <ButtonBackground />
-          <span className="relative z-10 flex items-center">
-            {children}
+          <span className="relative z-10 flex items-center justify-between w-full">
+            <span>{children}</span>
             <DropdownArrow />
           </span>
         </button>
