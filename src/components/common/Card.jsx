@@ -1,6 +1,13 @@
 // src/components/common/Card.jsx
 import React from 'react';
-import FadeIn from '../animations/FadeIn';
+import { 
+  AnimatedElement, 
+  fadeInVariants, 
+  scaleInVariants, 
+  slideInVariants,
+  StaggerContainer,
+  AnimateInView
+} from '../animations/FadeIn';
 
 /**
  * Card Component
