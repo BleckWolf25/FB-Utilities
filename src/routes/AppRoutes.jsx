@@ -7,7 +7,9 @@ import Home from '../pages/Home';
 import About from '../pages/About';
 import NotFound from '../pages/NotFound';
 import Converter from '../pages/Converter';
-import Minifier from '../pages/Minifier'; // Import the Minifier component
+import Minifier from '../pages/Minifier';
+import Unminifier from '../pages/Unminifier';
+import Calculator from '../pages/Calculator';
 
 // Layout wrapper component that includes navbar and footer
 const MainLayout = ({ children }) => (
@@ -61,6 +63,26 @@ const AppRoutes = () => {
           element={
             <MainLayout>
               <Minifier />
+            </MainLayout>
+          } 
+        />
+
+        {/* Calculator Page */}
+        <Route 
+          path="/calculator" 
+          element={
+            <MainLayout>
+              <Calculator />
+            </MainLayout>
+          } 
+        />
+        
+        {/* Unminifier Page */}
+        <Route 
+          path="/unminifier" 
+          element={
+            <MainLayout>
+              <Unminifier />
             </MainLayout>
           } 
         />
