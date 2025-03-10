@@ -10,6 +10,7 @@ import Converter from '../pages/Converter';
 import Minifier from '../pages/Minifier';
 import Unminifier from '../pages/Unminifier';
 import Calculator from '../pages/Calculator';
+import Temperature from '../pages/Temperature';
 
 // Layout wrapper component that includes navbar and footer
 const MainLayout = ({ children }) => (
@@ -47,12 +48,22 @@ const AppRoutes = () => {
           } 
         />
         
-        {/* Converter Page */}
+        {/* File Converter Page */}
         <Route 
           path="/converter" 
           element={
             <MainLayout>
               <Converter />
+            </MainLayout>
+          } 
+        />
+
+        {/* Temperature Converter Page */}
+        <Route 
+          path="/temperature" 
+          element={
+            <MainLayout>
+              <Temperature />
             </MainLayout>
           } 
         />
@@ -66,16 +77,6 @@ const AppRoutes = () => {
             </MainLayout>
           } 
         />
-
-        {/* Calculator Page */}
-        <Route 
-          path="/calculator" 
-          element={
-            <MainLayout>
-              <Calculator />
-            </MainLayout>
-          } 
-        />
         
         {/* Unminifier Page */}
         <Route 
@@ -83,6 +84,16 @@ const AppRoutes = () => {
           element={
             <MainLayout>
               <Unminifier />
+            </MainLayout>
+          } 
+        />
+
+        {/* Calculator Page */}
+        <Route 
+          path="/calculator" 
+          element={
+            <MainLayout>
+              <Calculator />
             </MainLayout>
           } 
         />

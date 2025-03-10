@@ -22,18 +22,19 @@ const Navbar = () => {
       hasDropdown: true,
       dropdownItems: [
         { label: 'Minifier', to: '/minifier' },
-        { label: 'Unminifier', to: '/unminifier' },
+        { label: 'Unminifier', to: '/unminifier' }
       ]
     },
     { 
-      label: 'File Related', 
+      label: 'Converters', 
       hasDropdown: true,
       dropdownItems: [
-        { label: 'Converter', to: '/converter' }
+        { label: 'File', to: '/converter' },
+        { label: 'Temperature', to: '/temperature' }
       ]
     },
     { 
-      label: 'Measurements & Numbers', 
+      label: 'Math', 
       hasDropdown: true,
       dropdownItems: [
         { label: 'Calculator', to: '/calculator' }
