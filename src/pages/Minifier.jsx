@@ -16,6 +16,7 @@ import {
   FaDatabase,
   FaHashtag // Use this for C#
 } from 'react-icons/fa';
+import useMinifier from '../hooks/useMinifier';
 
 // Create custom icon components to replace the problematic SI icons
 // These will use simple styled spans with text labels instead of SVG icons
@@ -54,7 +55,6 @@ const Minifier = () => {
   const [inputCode, setInputCode] = useState('');
   const [outputCode, setOutputCode] = useState('');
   const [fileName, setFileName] = useState('');
-  const [isMinifying, setIsMinifying] = useState(false);
   const [error, setError] = useState(null);
   const [stats, setStats] = useState(null);
   const [bulkFiles, setBulkFiles] = useState([]);
@@ -70,6 +70,27 @@ const Minifier = () => {
   const [showDropAnimation, setShowDropAnimation] = useState(false);
   
   const statsRef = useRef(null);
+  
+  // Use our custom minifier hook
+  const { 
+    isProcessing, 
+    error: minifierError, 
+    result: minifierResult, 
+    minifyCode, 
+    minifyBatch 
+  } = useMinifier();
+  
+  // Update component state when minifier state changes
+  useEffect(() => {
+    if (minifierError) {
+      setError(minifierError);
+    }
+    
+    if (minifierResult) {
+      setOutputCode(minifierResult.minifiedCode);
+      setStats(minifierResult.stats);
+    }
+  }, [minifierError, minifierResult]);
   
   useEffect(() => {
     if (stats && statsRef.current) {
@@ -310,7 +331,6 @@ const Minifier = () => {
     setInputCode('');
     setFileName('');
     setBulkMode(true);
-    setIsMinifying(true);
     
     try {
       const files = [];
@@ -318,8 +338,6 @@ const Minifier = () => {
       await Promise.all(Array.from(items).map(item => 
         processEntry(item.webkitGetAsEntry(), files)
       ));
-      
-      setIsMinifying(false);
       
       if (files.length === 0) {
         setError(`No valid ${selectedMinifier} files found in the folder(s).`);
@@ -337,7 +355,6 @@ const Minifier = () => {
       reader.readAsText(files[0]);
       
     } catch (error) {
-      setIsMinifying(false);
       setError(`Error processing folder: ${error.message}`);
     }
   };
@@ -407,374 +424,22 @@ const Minifier = () => {
     setStats(null);
   };
   
-  const minifyContent = (content, fileExtension) => {
-    let minified = '';
-    let fileType = selectedMinifier;
-    
-    if (bulkMode) {
-      // Determine file type based on extension in bulk mode
-      if (['js', 'jsx', 'mjs'].includes(fileExtension)) {
-        fileType = 'javascript';
-      } else if (['ts', 'tsx'].includes(fileExtension)) {
-        fileType = 'typescript';
-      } else if (['css', 'scss', 'less'].includes(fileExtension)) {
-        fileType = 'css';
-      } else if (['html', 'htm', 'xhtml'].includes(fileExtension)) {
-        fileType = 'html';
-      } else if (['json'].includes(fileExtension)) {
-        fileType = 'json';
-      } else if (['xml', 'svg'].includes(fileExtension)) {
-        fileType = 'xml';
-      } else if (['py', 'pyw'].includes(fileExtension)) {
-        fileType = 'python';
-      } else if (['rb', 'rake'].includes(fileExtension)) {
-        fileType = 'ruby';
-      } else if (['php', 'phtml', 'php5'].includes(fileExtension)) {
-        fileType = 'php';
-      } else if (['sql'].includes(fileExtension)) {
-        fileType = 'sql';
-      } else if (['md', 'markdown'].includes(fileExtension)) {
-        fileType = 'markdown';
-      } else if (['java'].includes(fileExtension)) {
-        fileType = 'java';
-      } else if (['cs'].includes(fileExtension)) {
-        fileType = 'csharp';
-      } else if (['cpp', 'cc', 'cxx', 'h', 'hpp'].includes(fileExtension)) {
-        fileType = 'cpp';
-      } else if (['go'].includes(fileExtension)) {
-        fileType = 'go';
-      }
-    }
-    
-    switch (fileType) {
-      case 'javascript':
-      case 'typescript': // TypeScript uses the same minification strategy as JavaScript
-        minified = content
-          .replace(/\/\/.*$/gm, '') // Remove single-line comments
-          .replace(/\/\*[\s\S]*?\*\//g, '') // Remove multi-line comments
-          .replace(/\s+/g, ' ') // Collapse whitespace
-          .replace(/\s*([{}:;,=+\-*/&|!<>()])\s*/g, '$1') // Remove spaces around operators/punctuation
-          .trim();
-        break;
-        
-      case 'css':
-        minified = content
-          .replace(/\/\*[\s\S]*?\*\//g, '') // Remove comments
-          .replace(/\s+/g, ' ') // Collapse whitespace
-          .replace(/\s*([:;{}])\s*/g, '$1') // Remove spaces around operators/punctuation
-          .replace(/;}|{ /g, '}') // Remove unnecessary characters
-          .trim();
-        break;
-        
-      case 'html':
-        minified = content
-          .replace(/<!--[\s\S]*?-->/g, '') // Remove HTML comments
-          .replace(/\s+/g, ' ') // Collapse whitespace
-          .replace(/>\s+</g, '><') // Remove space between tags
-          .trim();
-        break;
-        
-      case 'json':
-        try {
-          const obj = JSON.parse(content);
-          minified = JSON.stringify(obj); // Compact JSON format
-        } catch (e) {
-          throw new Error(`Invalid JSON: ${e.message}`);
-        }
-        break;
-        
-      case 'xml':
-        minified = content
-          .replace(/<!--[\s\S]*?-->/g, '') // Remove XML comments
-          .replace(/>\s+</g, '><') // Remove space between tags
-          .replace(/\s+/g, ' ') // Collapse whitespace
-          .trim();
-        break;
-        
-      case 'python':
-        minified = minifyPythonCode(content);
-        break;
-        
-      case 'ruby':
-        minified = minifyRubyCode(content);
-        break;
-        
-      case 'php':
-        minified = minifyPHPCode(content);
-        break;
-        
-      case 'sql':
-        minified = minifySQLCode(content);
-        break;
-        
-      case 'markdown':
-        minified = minifyMarkdownCode(content);
-        break;
-        
-      case 'java':
-        minified = minifyJavaCode(content);
-        break;
-        
-      case 'csharp':
-        minified = minifyCSharpCode(content);
-        break;
-        
-      case 'cpp':
-        minified = minifyCppCode(content);
-        break;
-        
-      case 'go':
-        minified = minifyGoCode(content);
-        break;
-        
-      default:
-        minified = content;
-    }
-    
-    return minified;
-  };
-  
-  // Helper functions for minifying different languages
-  
-  const minifyPythonCode = (content) => {
-    // This is a simplified Python minifier
-    // A more robust implementation would use a proper Python parser
-    
-    // Split the code into lines
-    const lines = content.split('\n');
-    const result = [];
-    
-    // Process line by line
-    lines.forEach(line => {
-      // Remove comments and trim whitespace
-      const trimmedLine = line.split('#')[0].trimEnd();
-      
-      // Skip empty lines
-      if (trimmedLine) {
-        result.push(trimmedLine);
-      }
-    });
-    
-    // Join lines back together
-    return result.join('\n');
-  };
-  
-  const minifyRubyCode = (content) => {
-    // Simplified Ruby minifier
-    return content
-      .replace(/#.*$/gm, '') // Remove single-line comments
-      .replace(/=begin[\s\S]*?=end/gm, '') // Remove multi-line comments
-      .split('\n')
-      .filter(line => line.trim()) // Remove empty lines
-      .join('\n');
-  };
-  
-  const minifyPHPCode = (content) => {
-    // Simplified PHP minifier
-    return content
-      .replace(/\/\/.*$/gm, '') // Remove single-line comments
-      .replace(/\/\*[\s\S]*?\*\//g, '') // Remove multi-line comments
-      .replace(/\s+/g, ' ') // Collapse whitespace
-      .replace(/\s*([{}:;,=+\-*/&|!<>()])\s*/g, '$1') // Remove spaces around operators/punctuation
-      .trim();
-  };
-  
-  const minifySQLCode = (content) => {
-    // Simplified SQL minifier
-    return content
-      .replace(/--.*$/gm, '') // Remove single-line comments
-      .replace(/\/\*[\s\S]*?\*\//g, '') // Remove multi-line comments
-      .replace(/\s+/g, ' ') // Collapse whitespace
-      .trim();
-  };
-  
-  const minifyMarkdownCode = (content) => {
-    // Simplified Markdown minifier
-    // Removes blank lines and trims whitespace but preserves most of the formatting
-    return content
-      .split('\n')
-      .map(line => line.trim())
-      .filter((line, index, arr) => {
-        // Keep headings, list items, etc. but remove consecutive blank lines
-        if (!line) {
-          const nextLine = arr[index + 1];
-          return nextLine ? !nextLine.trim() === false : false;
-        }
-        return true;
-      })
-      .join('\n');
-  };
-
-  const minifyJavaCode = (content) => {
-    // This is a simplified Java minifier
-    return content
-      .replace(/\/\/.*$/gm, '') // Remove single-line comments
-      .replace(/\/\*[\s\S]*?\*\//g, '') // Remove multi-line comments
-      .replace(/^\s*\n/gm, '') // Remove empty lines
-      .replace(/\s+/g, ' ') // Collapse all whitespace to a single space
-      .replace(/\s*([{}:;,()=+\-*/%&|^!<>?.])\s*/g, '$1') // Remove spaces around operators & punctuation
-      .replace(/;\s*}/g, '}') // Remove semicolons before closing braces
-      .trim();
-  };
-
-  const minifyCSharpCode = (content) => {
-    // C# minification, similar to Java but with some differences
-    return content
-      .replace(/\/\/.*$/gm, '') // Remove single-line comments
-      .replace(/\/\*[\s\S]*?\*\//g, '') // Remove multi-line comments
-      .replace(/^\s*\n/gm, '') // Remove empty lines
-      .replace(/\s+/g, ' ') // Collapse all whitespace to a single space
-      .replace(/\s*([{}:;,()=+\-*/%&|^!<>?.])\s*/g, '$1') // Remove spaces around operators & punctuation
-      .replace(/;\s*}/g, '}') // Remove semicolons before closing braces
-      .trim();
-  };
-
-  const minifyCppCode = (content) => {
-    // C++ minification
-    return content
-      .replace(/\/\/.*$/gm, '') // Remove single-line comments
-      .replace(/\/\*[\s\S]*?\*\//g, '') // Remove multi-line comments
-      .replace(/^\s*\n/gm, '') // Remove empty lines
-      .replace(/\s+/g, ' ') // Collapse all whitespace to a single space
-      .replace(/\s*([{}:;,()=+\-*/%&|^!<>?.])\s*/g, '$1') // Remove spaces around operators & punctuation
-      .replace(/#include\s+/g, '#include') // Handle preprocessor directives
-      .trim();
-  };
-
-  const minifyGoCode = (content) => {
-    // Go minification
-    return content
-      .replace(/\/\/.*$/gm, '') // Remove single-line comments
-      .replace(/\/\*[\s\S]*?\*\//g, '') // Remove multi-line comments
-      .replace(/^\s*\n/gm, '') // Remove empty lines
-      .replace(/\s+/g, ' ') // Collapse whitespace
-      .replace(/\s*([{}:;,()=+\-*/%&|^!<>?.])\s*/g, '$1') // Remove spaces around operators & punctuation
-      .trim();
-  };
-  
   const handleMinify = () => {
     if (!inputCode) {
       setError('Please enter or upload code to minify.');
       return;
     }
     
-    setIsMinifying(true);
     setError(null);
     
     setAnimateMinifyButton(true);
     setTimeout(() => setAnimateMinifyButton(false), 300);
     
-    setTimeout(() => {
-      try {
-        if (bulkMode) {
-          handleBulkMinify();
-        } else {
-          const minified = minifyContent(inputCode, fileName.split('.').pop().toLowerCase());
-          setOutputCode(minified);
-          
-          const originalSize = new Blob([inputCode]).size;
-          const minifiedSize = new Blob([minified]).size;
-          const reduction = originalSize - minifiedSize;
-          const percentage = ((reduction / originalSize) * 100).toFixed(2);
-          
-          setStats({
-            originalSize: (originalSize / 1024).toFixed(2),
-            minifiedSize: (minifiedSize / 1024).toFixed(2),
-            reduction: (reduction / 1024).toFixed(2),
-            percentage,
-          });
-        }
-      } catch (err) {
-        setError(`Error minifying code: ${err.message}`);
-      }
-      
-      setIsMinifying(false);
-    }, 1000);
-  };
-  
-  const handleBulkMinify = async () => {
-    const results = [];
-    let totalOriginalSize = 0;
-    let totalMinifiedSize = 0;
-    
-    for (let i = 0; i < bulkFiles.length; i++) {
-      const file = bulkFiles[i];
-      
-      try {
-        const content = await readFileAsText(file);
-        const fileExtension = file.name.split('.').pop().toLowerCase();
-        
-        const minified = minifyContent(content, fileExtension);
-        
-        const originalSize = new Blob([content]).size;
-        const minifiedSize = new Blob([minified]).size;
-        const reduction = originalSize - minifiedSize;
-        const percentage = ((reduction / originalSize) * 100).toFixed(2);
-        
-        totalOriginalSize += originalSize;
-        totalMinifiedSize += minifiedSize;
-        
-        const minifiedBlob = new Blob([minified], { type: 'text/plain' });
-        const minifiedUrl = URL.createObjectURL(minifiedBlob);
-        
-        let outputFileName = file.name;
-        const lastDotIndex = outputFileName.lastIndexOf('.');
-        if (lastDotIndex !== -1) {
-          outputFileName = outputFileName.slice(0, lastDotIndex) + '.min' + outputFileName.slice(lastDotIndex);
-        } else {
-          outputFileName += '.min';
-        }
-        
-        results.push({
-          originalName: file.name,
-          minifiedName: outputFileName,
-          originalSize: (originalSize / 1024).toFixed(2),
-          minifiedSize: (minifiedSize / 1024).toFixed(2),
-          reduction: (reduction / 1024).toFixed(2),
-          percentage,
-          url: minifiedUrl,
-          content: minified,
-        });
-        
-        if (i === currentBulkIndex) {
-          setOutputCode(minified);
-        }
-      } catch (err) {
-        console.error(`Error processing ${file.name}:`, err);
-        results.push({
-          originalName: file.name,
-          error: err.message
-        });
-      }
+    if (bulkMode) {
+      minifyBatch(bulkFiles, selectedMinifier);
+    } else {
+      minifyCode(inputCode, selectedMinifier);
     }
-    
-    const totalReduction = totalOriginalSize - totalMinifiedSize;
-    const totalPercentage = ((totalReduction / totalOriginalSize) * 100).toFixed(2);
-    
-    setStats({
-      originalSize: (totalOriginalSize / 1024).toFixed(2),
-      minifiedSize: (totalMinifiedSize / 1024).toFixed(2),
-      reduction: (totalReduction / 1024).toFixed(2),
-      percentage: totalPercentage,
-      fileCount: results.length,
-      successCount: results.filter(r => !r.error).length
-    });
-    
-    setBulkResults(results);
-    
-    const currentResult = results[currentBulkIndex];
-    if (currentResult && !currentResult.error) {
-      setOutputCode(currentResult.content);
-    }
-  };
-  
-  const readFileAsText = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = (event) => resolve(event.target.result);
-      reader.onerror = (error) => reject(error);
-      reader.readAsText(file);
-    });
   };
   
   const handleCopy = () => {
@@ -873,8 +538,6 @@ const Minifier = () => {
     if (!bulkResults.length) return;
     
     try {
-      setIsMinifying(true);
-      
       const JSZip = (await import('jszip')).default;
       const zip = new JSZip();
       
@@ -894,10 +557,7 @@ const Minifier = () => {
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
-      
-      setIsMinifying(false);
     } catch (error) {
-      setIsMinifying(false);
       setError(`Error creating zip file: ${error.message}`);
       
       bulkResults.forEach(result => {
@@ -1046,7 +706,7 @@ const Minifier = () => {
                   </p>
                 )}
               </div>
-              {isMinifying && bulkMode && (
+              {isProcessing && bulkMode && (
                 <div className="mt-4">
                   <div className="flex items-center justify-center">
                     <svg className="animate-spin h-5 w-5 mr-2 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -1121,12 +781,12 @@ const Minifier = () => {
             <div className="text-center mb-6">
               <button
                 onClick={handleMinify}
-                disabled={!inputCode || isMinifying}
+                disabled={!inputCode || isProcessing}
                 className={`px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center justify-center mx-auto disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 ${
                   animateMinifyButton ? 'scale-95' : ''
                 }`}
               >
-                {isMinifying ? (
+                {isProcessing ? (
                   <>
                     <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
