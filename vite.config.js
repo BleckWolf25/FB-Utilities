@@ -20,6 +20,12 @@ export default defineConfig(({ mode }) => {
         '@context': path.resolve(__dirname, 'src/context'),
       },
     },
+    define: {
+      'process.env': {},
+    },
+    worker: {
+      format: 'es',
+    },
     build: {
     target: 'esnext',
     outDir: 'dist',
@@ -42,6 +48,10 @@ export default defineConfig(({ mode }) => {
     preview: {
       port: 5000,
       open: true,
+    },
+    optimizeDeps: {
+      include: ['@bundled-es-modules/pdfjs-dist'],
+      exclude: ['pdfjs-dist']
     },
     base: mode === 'github-pages' ? '/FB-Utilities/' : '/',
   };
