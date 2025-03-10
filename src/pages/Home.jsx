@@ -1,6 +1,6 @@
 // src/pages/Home.jsx
 import React from 'react';
-import { AnimatedElement, fadeInVariants, scaleInVariants, slideInVariants, StaggerContainer, AnimateInView } from '../components/animations/FadeIn';
+import { AnimatedElement, fadeInVariants, scaleInVariants, slideInVariants, AnimateInView } from '../components/animations/FadeIn';
 import Button from '../components/common/NavButton';
 import Card from '../components/common/Card';
 
