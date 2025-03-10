@@ -10,7 +10,7 @@ const Navbar = () => {
   const location = useLocation();
   const { isDark, toggleTheme } = useTheme();
   
-  // Updated navigation items
+  // Updated navigation items with Unminifier added
   const navItems = [
     {
       label: 'Home',
@@ -22,14 +22,21 @@ const Navbar = () => {
       hasDropdown: true,
       dropdownItems: [
         { label: 'Minifier', to: '/minifier' },
-        { label: 'unMinifier ', to: '/features' },
+        { label: 'Unminifier', to: '/unminifier' },
       ]
     },
     { 
       label: 'File Related', 
       hasDropdown: true,
       dropdownItems: [
-     { label: 'Converter', to: '/converter' }
+        { label: 'Converter', to: '/converter' }
+      ]
+    },
+    { 
+      label: 'Measurements & Numbers', 
+      hasDropdown: true,
+      dropdownItems: [
+        { label: 'Calculator', to: '/calculator' }
       ]
     },
   ];
