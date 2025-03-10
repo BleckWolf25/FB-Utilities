@@ -8,6 +8,10 @@ module.exports = {
         {
           test: /\.jsx?$/,
           use: ['babel-loader'],
+        },
+        {
+          test: /\.worker\.js$/,
+          use: { loader: 'worker-loader', options: { inline: 'no-fallback' } }
         }
       ]
     }
