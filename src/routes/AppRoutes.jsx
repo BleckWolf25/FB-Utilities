@@ -11,6 +11,8 @@ import Minifier from '../pages/Minifier';
 import Unminifier from '../pages/Unminifier';
 import Calculator from '../pages/Calculator';
 import Temperature from '../pages/Temperature';
+import UnitsConverter from '../pages/UnitsConverter';
+import TimeZoneConverter from '../pages/TimeZoneConverter';
 
 // Layout wrapper component that includes navbar and footer
 const MainLayout = ({ children }) => (
@@ -54,6 +56,26 @@ const AppRoutes = () => {
           element={
             <MainLayout>
               <Converter />
+            </MainLayout>
+          } 
+        />
+
+        {/* Units Converter Page */}
+        <Route 
+          path="/units" 
+          element={
+            <MainLayout>
+              <UnitsConverter />
+            </MainLayout>
+          } 
+        />
+
+        {/* Time Zone Converter Page */}
+        <Route 
+          path="/timezone" 
+          element={
+            <MainLayout>
+              <TimeZoneConverter />
             </MainLayout>
           } 
         />
