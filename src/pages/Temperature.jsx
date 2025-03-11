@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { FaThermometerHalf, FaInfoCircle, FaCode, FaGlobe, FaGithub } from 'react-icons/fa';
+import { FaThermometerHalf, FaInfoCircle, FaCode } from 'react-icons/fa';
 import { AnimatedElement, AnimateInView, StaggerContainer, fadeInVariants, scaleInVariants, slideInVariants } from '../components/animations/FadeIn';
+import { v4 as uuidv4 } from 'uuid';
 
 const Temperature = () => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -54,7 +55,7 @@ const Temperature = () => {
   // Add conversion to history
   const addToHistory = (celsiusValue, fahrenheitValue, direction) => {
     const newEntry = {
-      id: Date.now(),
+      id: uuidv4(),
       celsius: celsiusValue.toFixed(2),
       fahrenheit: fahrenheitValue.toFixed(2),
       direction,
@@ -120,7 +121,7 @@ const Temperature = () => {
         <StaggerContainer>
           <AnimatedElement variants={fadeInVariants}>
             <h1 className="text-3xl font-bold text-center text-gray-800 dark:text-white mb-2">
-              Temperature Converter
+              Temperature Converter Utility
             </h1>
           </AnimatedElement>
           <AnimatedElement variants={fadeInVariants} delay={1}>
@@ -130,7 +131,7 @@ const Temperature = () => {
           </AnimatedElement>
 
           <div className="max-w-6xl mx-auto">
-            <AnimateInView variants={scaleInVariants}>
+            <AnimateInView variants={scaleInVariants} viewport={{ amount: 0.1, once: true }}>
               <div className="flex flex-col lg:flex-row gap-8">
                 {/* Temperature Converter Column */}
                 <div className="lg:w-1/2">
@@ -151,7 +152,7 @@ const Temperature = () => {
                           <div className="w-full h-8 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden">
                             <div 
                               className={`h-full ${getTemperatureColor(celsius)} transition-all duration-300`} 
-                              style={{ width: celsius ? `${Math.min(Math.max(parseFloat(celsius) + 30, 0), 100)}%` : '0%' }}
+                              style={{ width: celsius ? `${Math.min(Math.max(parseFloat(celsius) + 30, 0), 100)}%` : '3%' }}
                             />
                           </div>
                           <div className="text-center mt-2 text-gray-700 dark:text-gray-300">
@@ -282,7 +283,7 @@ const Temperature = () => {
                         {activeTab === 'overview' && (
                           <StaggerContainer>
                             <AnimatedElement variants={fadeInVariants}>
-                              <h3 className="text-lg font-medium text-gray-800 dark:text-white">About Temperature Converter</h3>
+                              <h3 className="text-lg font-medium text-gray-800 dark:text-white">About Temperature Converter</h3><br></br>
                             </AnimatedElement>
                             <AnimatedElement variants={fadeInVariants} delay={1}>
                               <p className="text-gray-600 dark:text-gray-300">
@@ -317,7 +318,7 @@ const Temperature = () => {
                         {activeTab === 'features' && (
                           <StaggerContainer>
                             <AnimatedElement variants={fadeInVariants}>
-                              <h3 className="text-lg font-medium text-gray-800 dark:text-white">Converter Features</h3>
+                              <h3 className="text-lg font-medium text-gray-800 dark:text-white">Converter Features</h3><br></br>
                             </AnimatedElement>
                             <AnimatedElement variants={fadeInVariants} delay={1}>
                               <div className="space-y-4">
@@ -356,32 +357,6 @@ const Temperature = () => {
                       </div>
                     </div>
                   </AnimateInView>
-
-                  {/* Source code/Live website links */}
-                  <AnimatedElement variants={fadeInVariants} delay={2} className="mt-4 text-center">
-                    <div className="flex justify-center gap-8">
-                      <a 
-                        href="#" 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="group inline-flex items-center px-4 py-2 text-indigo-600 dark:text-indigo-400 
-                          hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-lg transition-all duration-300"
-                      >
-                        <FaGithub className="mr-2 group-hover:scale-110 transition-transform duration-300" /> 
-                        <span className="font-medium">Source Code</span>
-                      </a>
-                      <a 
-                        href="#" 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="group inline-flex items-center px-4 py-2 text-indigo-600 dark:text-indigo-400 
-                          hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-lg transition-all duration-300"
-                      >
-                        <FaGlobe className="mr-2 group-hover:scale-110 transition-transform duration-300" /> 
-                        <span className="font-medium">Live Website</span>
-                      </a>
-                    </div>
-                  </AnimatedElement>
                 </div>
               </div>
             </AnimateInView>
