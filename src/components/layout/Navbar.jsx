@@ -1,12 +1,15 @@
 // src/components/layout/Navbar.jsx
+
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import NavButton from '../common/NavButton';
 import { useTheme } from '../../context/ThemeContext';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [openDropdownIndex, setOpenDropdownIndex] = useState(null);
   const location = useLocation();
   const { isDark, toggleTheme } = useTheme();
   
@@ -18,7 +21,6 @@ const Navbar = () => {
     },
     { 
       label: 'Coding', 
-      to: '/coding',
       hasDropdown: true,
       dropdownItems: [
         { label: 'Minifier', to: '/minifier' },
@@ -26,11 +28,19 @@ const Navbar = () => {
       ]
     },
     { 
+      label: 'Time & Temperature', 
+      hasDropdown: true,
+      dropdownItems: [
+        { label: 'Time Zone Converter', to: '/timezone' },
+        { label: 'Temperature', to: '/temperature' }
+      ]
+    },
+    { 
       label: 'Converters', 
       hasDropdown: true,
       dropdownItems: [
         { label: 'File', to: '/converter' },
-        { label: 'Temperature', to: '/temperature' }
+        { label: 'Units', to: '/units' }
       ]
     },
     { 
@@ -46,6 +56,17 @@ const Navbar = () => {
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
     document.body.style.overflow = isMenuOpen ? 'auto' : 'hidden';
+  };
+
+  // Function to toggle a specific dropdown
+  const handleDropdownToggle = (index) => {
+    // If clicked dropdown is already open, close it
+    if (openDropdownIndex === index) {
+      setOpenDropdownIndex(null);
+    } else {
+      // Otherwise close the current one and open the clicked one
+      setOpenDropdownIndex(index);
+    }
   };
 
   useEffect(() => {
@@ -94,6 +115,8 @@ const Navbar = () => {
                 dropdownItems={item.dropdownItems}
                 isActive={location.pathname === item.to}
                 className="dark:hover:bg-gray-800/50 dark:text-gray-300"
+                isDropdownOpen={openDropdownIndex === index}
+                onDropdownToggle={() => handleDropdownToggle(index)}
               >
                 {item.label}
               </NavButton>
@@ -162,90 +185,124 @@ const Navbar = () => {
       </div>
 
       {/* Mobile Menu */}
-      <div 
-        className={`md:hidden fixed inset-0 z-40 bg-white dark:bg-gray-900 transform transition-transform ease-in-out duration-300 pt-16 ${
-          isMenuOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
-      >
-        <div className="flex flex-col h-full overflow-y-auto pb-12 px-4">
-          <nav className="flex flex-col space-y-1 mt-6">
-            {navItems.map((item, index) => (
-              <div key={index} className="py-2 border-b border-gray-200 dark:border-gray-800">
-                <Link 
-                  to={item.to || '#'} 
-                  className="block px-3 py-2 text-lg font-medium text-gray-800 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300"
-                >
-                  {item.label}
-                </Link>
-                
-                {item.hasDropdown && (
-                  <div className="pl-5 mt-1 space-y-1">
-                    {item.dropdownItems.map((dropdownItem, dropdownIndex) => (
-                      <Link 
-                        key={dropdownIndex}
-                        to={dropdownItem.to || dropdownItem.href || '#'} 
-                        className="block pl-5 py-2 text-base font-medium text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300"
-                        target={dropdownItem.external ? "_blank" : undefined}
-                        rel={dropdownItem.external ? "noopener noreferrer" : undefined}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div 
+            className="md:hidden fixed inset-0 z-40 bg-white dark:bg-gray-900 pt-16"
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+          >
+            <div className="flex flex-col h-full overflow-y-auto pb-12 px-4">
+              <nav className="flex flex-col space-y-1 mt-6">
+                {navItems.map((item, index) => (
+                  <motion.div 
+                    key={index} 
+                    className="py-2 border-b border-gray-200 dark:border-gray-800"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                  >
+                    <Link 
+                      to={item.to || '#'} 
+                      className="block px-3 py-2 text-lg font-medium text-gray-800 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300"
+                    >
+                      {item.label}
+                    </Link>
+                    
+                    {item.hasDropdown && (
+                      <motion.div 
+                        className="pl-5 mt-1 space-y-1"
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        transition={{ delay: 0.1 }}
                       >
-                        {dropdownItem.label}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-          </nav>
+                        {item.dropdownItems.map((dropdownItem, dropdownIndex) => (
+                          <motion.div
+                            key={dropdownIndex}
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.1 + (dropdownIndex * 0.05) }}
+                          >
+                            <Link 
+                              to={dropdownItem.to || dropdownItem.href || '#'} 
+                              className="block pl-5 py-2 text-base font-medium text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300"
+                              target={dropdownItem.external ? "_blank" : undefined}
+                              rel={dropdownItem.external ? "noopener noreferrer" : undefined}
+                            >
+                              {dropdownItem.label}
+                            </Link>
+                          </motion.div>
+                        ))}
+                      </motion.div>
+                    )}
+                  </motion.div>
+                ))}
+              </nav>
 
-          {/* Mobile Theme Toggle */}
-          <div className="mt-8 px-3">
-            <button
-              onClick={toggleTheme}
-              className="w-full p-3 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300 flex items-center justify-center"
-            >
-              <span className="mr-2 dark:text-gray-200">Switch to {isDark ? 'Light' : 'Dark'} Theme</span>
-              {isDark ? (
-                <svg
-                  className="h-5 w-5 text-yellow-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+              {/* Mobile Theme Toggle */}
+              <motion.div 
+                className="mt-8 px-3"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
+              >
+                <motion.button
+                  onClick={toggleTheme}
+                  className="w-full p-3 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300 flex items-center justify-center"
+                  whileTap={{ scale: 0.95 }}
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707"
-                  />
-                </svg>
-              ) : (
-                <svg
-                  className="h-5 w-5 text-gray-700 dark:text-gray-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
-                  />
-                </svg>
-              )}
-            </button>
-          </div>
-        </div>
-      </div>
+                  <span className="mr-2 dark:text-gray-200">Switch to {isDark ? 'Light' : 'Dark'} Theme</span>
+                  {isDark ? (
+                    <svg
+                      className="h-5 w-5 text-yellow-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707"
+                      />
+                    </svg>
+                  ) : (
+                    <svg
+                      className="h-5 w-5 text-gray-700 dark:text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+                      />
+                    </svg>
+                  )}
+                </motion.button>
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Backdrop for mobile menu */}
-      {isMenuOpen && (
-        <div 
-          className="md:hidden fixed inset-0 bg-black bg-opacity-25 dark:bg-opacity-50 z-30"
-          onClick={toggleMenu}
-          aria-hidden="true"
-        />
-      )}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div 
+            className="md:hidden fixed inset-0 bg-black bg-opacity-25 dark:bg-opacity-50 z-30"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={toggleMenu}
+            aria-hidden="true"
+          />
+        )}
+      </AnimatePresence>
     </header>
   );
 };
