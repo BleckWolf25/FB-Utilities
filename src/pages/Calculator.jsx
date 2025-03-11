@@ -11,7 +11,7 @@ const Calculator = () => {
         <StaggerContainer>
           <AnimatedElement variants={fadeInVariants}>
             <h1 className="text-3xl font-bold text-center text-gray-800 dark:text-white mb-2">
-              The Great Calculator
+              Calculator Utility
             </h1>
           </AnimatedElement>
           <AnimatedElement variants={fadeInVariants} delay={1}>
