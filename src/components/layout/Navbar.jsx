@@ -31,6 +31,7 @@ const Navbar = () => {
       hasDropdown: true,
       dropdownItems: [
         { label: 'Time Zone Converter', to: '/timezone' },
+        { label: 'Time Stamp Generator', to: '/timestamp' },
         { label: 'Temperature', to: '/temperature' }
       ]
     },

@@ -13,6 +13,7 @@ import Calculator from '../pages/Calculator';
 import Temperature from '../pages/Temperature';
 import UnitsConverter from '../pages/UnitsConverter';
 import TimeZoneConverter from '../pages/TimeZoneConverter';
+import TimestampGenerator from '../pages/TimestampGenerator';
 
 // Layout wrapper component that includes navbar and footer
 const MainLayout = ({ children }) => (
@@ -30,6 +31,7 @@ const AppRoutes = () => {
   return (
     <BrowserRouter>
       <Routes>
+
         {/* Home Page */}
         <Route 
           path="/" 
@@ -76,6 +78,16 @@ const AppRoutes = () => {
           element={
             <MainLayout>
               <TimeZoneConverter />
+            </MainLayout>
+          } 
+        />
+
+        {/* Time Stamp Generator Page */}
+        <Route 
+          path="/timestamp" 
+          element={
+            <MainLayout>
+              <TimestampGenerator />
             </MainLayout>
           } 
         />
