@@ -14,6 +14,7 @@ import Temperature from '../pages/Temperature';
 import UnitsConverter from '../pages/UnitsConverter';
 import TimeZoneConverter from '../pages/TimeZoneConverter';
 import TimestampGenerator from '../pages/TimestampGenerator';
+import PasswordGenerator from '../pages/PasswordGenerator';
 
 // Layout wrapper component that includes navbar and footer
 const MainLayout = ({ children }) => (
@@ -128,6 +129,16 @@ const AppRoutes = () => {
           element={
             <MainLayout>
               <Calculator />
+            </MainLayout>
+          } 
+        />
+
+        {/* Random Password Generator Page */}
+        <Route 
+          path="/passwordgenerator" 
+          element={
+            <MainLayout>
+              <PasswordGenerator />
             </MainLayout>
           } 
         />

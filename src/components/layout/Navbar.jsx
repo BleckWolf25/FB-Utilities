@@ -50,6 +50,13 @@ const Navbar = () => {
         { label: 'Calculator', to: '/calculator' }
       ]
     },
+    { 
+      label: 'Security', 
+      hasDropdown: true,
+      dropdownItems: [
+        { label: 'Password Generator', to: '/passwordgenerator' }
+      ]
+    },
   ];
   
   // Toggle mobile menu
