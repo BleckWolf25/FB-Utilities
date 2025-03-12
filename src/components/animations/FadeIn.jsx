@@ -15,10 +15,10 @@ export const fadeInVariants = {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.7,
+      duration: 0.5, 
       // Framer Motion's built-in easing functions for smoother animations
       ease: "easeOut",
-      delay: custom * 0.1
+      delay: custom * 0.07
     }
   })
 };
@@ -32,12 +32,12 @@ export const scaleInVariants = {
     opacity: 1,
     scale: 1,
     transition: {
-      duration: 0.8,
+      duration: 0.6, 
       // Using spring physics for more natural motion
       type: "spring",
       damping: 15,
       stiffness: 100,
-      delay: custom * 0.1
+      delay: custom * 0.07 
     }
   })
 };
@@ -53,12 +53,12 @@ export const slideInVariants = {
     x: 0,
     y: 0,
     transition: {
-      duration: 0.8,
+      duration: 0.6, 
       // Spring with slight bounce for dynamic feel
       type: "spring",
       damping: 20,
       stiffness: 120,
-      delay: custom * 0.1
+      delay: custom * 0.07 
     }
   })
 };
@@ -181,10 +181,10 @@ export const AnimateInView = ({
  */
 export const StaggerContainer = ({ 
   children, 
-  staggerDelay = 0.1, 
+  staggerDelay = 0.07,
   className = '',
   staggerChildren = true,
-  delayChildren = 0,
+  delayChildren = 0.1,
   ...props
 }) => {
   // Container animation variants
