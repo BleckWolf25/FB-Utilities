@@ -1,6 +1,6 @@
 // src/routes/AppRoutes.jsx
-import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import Home from '../pages/Home';
@@ -15,17 +15,28 @@ import UnitsConverter from '../pages/UnitsConverter';
 import TimeZoneConverter from '../pages/TimeZoneConverter';
 import TimestampGenerator from '../pages/TimestampGenerator';
 import PasswordGenerator from '../pages/PasswordGenerator';
+import { path } from 'framer-motion/client';
 
 // Layout wrapper component that includes navbar and footer
-const MainLayout = ({ children }) => (
-  <div className="flex flex-col min-h-screen">
-    <Navbar />
-    <main className="flex-grow">
-      {children}
-    </main>
-    <Footer />
-  </div>
-);
+const MainLayout = ({ children }) => {
+  const location = useLocation();
+
+  useEffect(() => {
+    // Scroll to the top instantly on route change and reload the page so the animations work correctly and the user sees top->bottom not bottom->top
+    window.scrollTo(0, 0);
+    path.pathname
+  }, [location.pathname]);
+
+  return (
+    <div className="flex flex-col min-h-screen">
+      <Navbar />
+      <main className="flex-grow">
+        {children}
+      </main>
+      <Footer />
+    </div>
+  );
+};
 
 // Routes configuration
 const AppRoutes = () => {
@@ -34,125 +45,125 @@ const AppRoutes = () => {
       <Routes>
 
         {/* Home Page */}
-        <Route 
-          path="/" 
+        <Route
+          path="/"
           element={
             <MainLayout>
               <Home />
             </MainLayout>
-          } 
+          }
         />
-        
+
         {/* About Page */}
-        <Route 
-          path="/about" 
+        <Route
+          path="/about"
           element={
             <MainLayout>
               <About />
             </MainLayout>
-          } 
+          }
         />
-        
+
         {/* File Converter Page */}
-        <Route 
-          path="/converter" 
+        <Route
+          path="/converter"
           element={
             <MainLayout>
               <Converter />
             </MainLayout>
-          } 
+          }
         />
 
         {/* Units Converter Page */}
-        <Route 
-          path="/units" 
+        <Route
+          path="/units"
           element={
             <MainLayout>
               <UnitsConverter />
             </MainLayout>
-          } 
+          }
         />
 
         {/* Time Zone Converter Page */}
-        <Route 
-          path="/timezone" 
+        <Route
+          path="/timezone"
           element={
             <MainLayout>
               <TimeZoneConverter />
             </MainLayout>
-          } 
+          }
         />
 
         {/* Time Stamp Generator Page */}
-        <Route 
-          path="/timestamp" 
+        <Route
+          path="/timestamp"
           element={
             <MainLayout>
               <TimestampGenerator />
             </MainLayout>
-          } 
+          }
         />
 
         {/* Temperature Converter Page */}
-        <Route 
-          path="/temperature" 
+        <Route
+          path="/temperature"
           element={
             <MainLayout>
               <Temperature />
             </MainLayout>
-          } 
+          }
         />
-        
+
         {/* Minifier Page */}
-        <Route 
-          path="/minifier" 
+        <Route
+          path="/minifier"
           element={
             <MainLayout>
               <Minifier />
             </MainLayout>
-          } 
+          }
         />
-        
+
         {/* Unminifier Page */}
-        <Route 
-          path="/unminifier" 
+        <Route
+          path="/unminifier"
           element={
             <MainLayout>
               <Unminifier />
             </MainLayout>
-          } 
+          }
         />
 
         {/* Calculator Page */}
-        <Route 
-          path="/calculator" 
+        <Route
+          path="/calculator"
           element={
             <MainLayout>
               <Calculator />
             </MainLayout>
-          } 
+          }
         />
 
         {/* Random Password Generator Page */}
-        <Route 
-          path="/passwordgenerator" 
+        <Route
+          path="/passwordgenerator"
           element={
             <MainLayout>
               <PasswordGenerator />
             </MainLayout>
-          } 
+          }
         />
-        
+
         {/* Route for handling 404 Not Found */}
-        <Route 
-          path="*" 
+        <Route
+          path="*"
           element={
             <MainLayout>
               <NotFound />
             </MainLayout>
-          } 
-        /> 
-        
+          }
+        />
+
         {/* Note: This route will never be reached because of the catch-all route above */}
         {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
       </Routes>
