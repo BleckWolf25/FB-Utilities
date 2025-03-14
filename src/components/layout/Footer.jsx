@@ -10,32 +10,24 @@ import Button from '../common/Button';
  * newsletter signup, and social links.
  */
 const Footer = () => {
+
   // Current year for copyright
   const currentYear = new Date().getFullYear();
   
   // Footer navigation sections
   const footerSections = [
     {
-      title: 'Resources',
-      links: [
-/*      { label: 'Documentation', to: '/docs' },
-        { label: 'Tutorials', to: '/tutorials' },
-        { label: 'Blog', to: '/blog' },
-        { label: 'Community', href: 'https://community.example.com' }, */
-      ]
-    },
-    {
       title: 'FB-Utilities',
       links: [
+        { label: 'Home', to: '/' },
         { label: 'About', to: '/about' },
-        { label: 'Contact', to: '/contact' },
       ]
     },
     {
-      title: 'ToS',
+      title: 'Legal',
       links: [
-        { label: 'Terms of Service', to: '/terms' },
-        { label: 'Privacy Policy', to: '/privacy' },
+        { label: 'Terms of Service', to: '/termsofservice' },
+        { label: 'Privacy Policy', to: '/privacypolicy' },
       ]
     },
   ];
@@ -50,12 +42,15 @@ const Footer = () => {
       </svg>
     },
   ];
-  
+
+
   return (
     <footer className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
+      
       {/* Main Footer Content */}
       <div className="container mx-auto px-4 py-12 md:py-16">
         <div className="grid grid-cols-1 md:grid-cols-6 gap-8">
+          
           {/* Brand Section */}
           <div className="md:col-span-2">
             <div className="flex items-center mb-6">
@@ -94,7 +89,7 @@ const Footer = () => {
           
           {/* Navigation Sections */}
           <div className="md:col-span-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-            {footerSections.map((section, index) => (
+          {footerSections.map((section, index) => (
               <div key={index}>
                 <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-300 uppercase tracking-wider mb-4">
                   {section.title}
@@ -112,9 +107,9 @@ const Footer = () => {
                       ) : (
                         <a 
                           href={link.href} 
-                          className="text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                           target="_blank"
                           rel="noopener noreferrer"
+                          className="text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                         >
                           {link.label}
                         </a>
