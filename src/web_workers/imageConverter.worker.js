@@ -2,7 +2,7 @@
 
 // Handle image conversion
 self.onmessage = async (event) => {
-    const { imageData, sourceFormat, targetFormat } = event.data;
+    const { imageData, targetFormat } = event.data;
     
     try {
       // Create image from blob

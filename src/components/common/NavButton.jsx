@@ -1,5 +1,5 @@
 // src/components/common/NavButton.jsx
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -41,11 +41,6 @@ const NavButton = ({
   };
   
   // Close dropdown when clicking outside
-  const handleClickOutside = () => {
-    if (isDropdownOpen) {
-      setisDropdownOpen(false);
-    }
-  };
 
   // Shared button appearance
   const buttonClasses = `

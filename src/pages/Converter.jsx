@@ -61,7 +61,6 @@ const Converter = () => {
     targetFormat,
     isConverting,
     conversionProgress,
-    conversionProgressMessage,
     convertedFile,
     error,
     isFFmpegLoading,

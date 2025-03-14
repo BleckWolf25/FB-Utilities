@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FaClock, FaInfoCircle, FaCode, FaHistory } from 'react-icons/fa';
+import { FaClock, FaInfoCircle, FaCode } from 'react-icons/fa';
 import { AnimatedElement, AnimateInView, StaggerContainer, fadeInVariants, scaleInVariants, slideInVariants } from '../components/animations/FadeIn';
 import { v4 as uuidv4 } from 'uuid';
 

@@ -13,9 +13,7 @@ import {
   FaJs, 
   FaMarkdown, 
   FaCode,
-  FaDatabase,
-  FaHashtag // Use this for C#
-} from 'react-icons/fa';
+  FaDatabase} from 'react-icons/fa';
 import useMinifier from '../hooks/useMinifier';
 
 // Create custom icon components to replace the problematic SI icons
@@ -958,33 +956,5 @@ const Minifier = () => {
   );
 };
 
-const animationStyles = `
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes slideUp {
-  from { transform: translateY(20px); }
-  to { transform: translateY(0); }
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.5s ease-out forwards;
-}
-
-.animate-slide-up {
-  animation: slideUp 0.5s ease-out forwards;
-}
-
-@keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-}
-
-.animate-pulse {
-  animation: pulse 0.5s ease-in-out infinite;
-}
-`;
 
 export default Minifier;

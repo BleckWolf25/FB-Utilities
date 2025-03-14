@@ -18,7 +18,6 @@ const formatJavaScript = (content) => {
   let inMultiLineComment = false;
   
   // Track if we need to add a newline
-  let needNewline = false;
   
   // Track if the last character was a space
   let lastWasSpace = false;
@@ -179,11 +178,6 @@ const formatHTML = (content) => {
   const indentChar = '  '; // 2 spaces
   
   // Track if we're inside a tag
-  let inTag = false;
-  let inAttribute = false;
-  let attributeChar = '';
-  let inComment = false;
-  let inDoctype = false;
   
   // Function to add a tag with proper indentation
   const addLine = (text) => {

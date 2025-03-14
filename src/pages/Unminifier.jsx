@@ -13,9 +13,7 @@ import {
   FaJs, 
   FaMarkdown, 
   FaCode,
-  FaDatabase,
-  FaHashtag
-} from 'react-icons/fa';
+  FaDatabase} from 'react-icons/fa';
 import useUnminifier from "../hooks/useUnminifier_hook.js";
 
 // Create custom icon components for formats without standard React icons
@@ -64,7 +62,7 @@ const Unminifier = () => {
   const fileInputRef = useRef(null);
   const folderInputRef = useRef(null);
   
-  const [showSuccessAnimation, setShowSuccessAnimation] = useState(false);
+  const [, setShowSuccessAnimation] = useState(false);
   const [animateUnminifyButton, setAnimateUnminifyButton] = useState(false);
   const [showDropAnimation, setShowDropAnimation] = useState(false);
   
