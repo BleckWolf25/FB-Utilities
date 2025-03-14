@@ -18,6 +18,7 @@ import TimestampGenerator from '../pages/TimestampGenerator';
 import PasswordGenerator from '../pages/PasswordGenerator';
 import Favicon from '../pages/Favicon';
 // import Currency from '../pages/Currency';
+import ImageHexColor from '../pages/ImageHexColor';
 
 // Layout wrapper component that includes navbar and footer
 const MainLayout = ({ children }) => {
@@ -106,6 +107,17 @@ const AppRoutes = () => {
             </MainLayout>
           }
         />
+
+        {/* Currency Converter Page */}
+        <Route
+          path="/imagehexcolor"
+          element={
+            <MainLayout>
+              <ImageHexColor />
+            </MainLayout>
+          }
+        />
+
 
         {/* Time Zone Converter Page */}
         <Route

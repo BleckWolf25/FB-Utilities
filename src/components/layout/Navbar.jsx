@@ -27,6 +27,13 @@ const Navbar = () => {
       ]
     },
     { 
+      label: 'Media', 
+      hasDropdown: true,
+      dropdownItems: [
+        { label: 'Image Color Picker', to: '/imagehexcolor' },
+      ]
+    },
+    { 
       label: 'Time & Temperature', 
       hasDropdown: true,
       dropdownItems: [
