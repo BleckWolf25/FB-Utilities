@@ -291,7 +291,7 @@ const Home = () => {
         >
           <div className="md:flex items-center justify-between">
             <div className="mb-6 md:mb-0 md:mr-8">
-              <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to streamline your workflow?</h2>
+              <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to boost your workflow?</h2>
               <p className="text-indigo-100">Join thousands of users who trust FB-Utilities for their daily tasks.</p>
             </div>
             <AnimatedElement
@@ -302,15 +302,6 @@ const Home = () => {
                 duration: 0.5
               }}
             >
-              <Button 
-                variant="light"
-                size="lg"
-                className="whitespace-nowrap"
-                onClick={() => window.location.href = '/get-started'}
-                aria-label="Get started with FB-Utilities"
-              >
-                Get Started Now
-              </Button>
             </AnimatedElement>
           </div>
         </AnimateInView>
