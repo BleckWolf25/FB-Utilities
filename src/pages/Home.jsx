@@ -14,6 +14,7 @@ import {
 import Button from '../components/common/NavButton';
 import Card from '../components/common/Card';
 import VideoPlayer from '../components/common/VideoPlayer';
+import LegalWarn from '../components/common/LegalWarn';
 
 /**
  * Home component - Main landing page for FB-Utilities
@@ -87,6 +88,9 @@ const Home = () => {
       
       {/* Scroll Progress bar */}
       <ScrollProgressBar height={3} color="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500" />
+
+      {/* Legal Warn Toast - No cookie dependencies, always shows */}
+      <LegalWarn />
       
       <div className="max-w-6xl mx-auto">
         <div className="relative">

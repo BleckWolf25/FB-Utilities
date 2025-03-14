@@ -19,6 +19,8 @@ import PasswordGenerator from '../pages/PasswordGenerator';
 import Favicon from '../pages/Favicon';
 // import Currency from '../pages/Currency';
 import ImageHexColor from '../pages/ImageHexColor';
+import TermsOfService from '../pages/TermsOfService';
+import PrivacyPolicy from '../pages/PrivacyPolicy';
 
 // Layout wrapper component that includes navbar and footer
 const MainLayout = ({ children }) => {
@@ -67,6 +69,25 @@ const AppRoutes = () => {
           }
         />
 
+        {/* Terms Of Service Page */}
+        <Route
+          path="/terms-of-service"
+          element={
+            <MainLayout>
+              <TermsOfService />
+            </MainLayout>
+          }
+        />
+
+        {/* Privacy Policy Page */}
+        <Route
+          path="/privacy-policy"
+          element={
+            <MainLayout>
+              <PrivacyPolicy />
+            </MainLayout>
+          }
+        />
         {/* File Converter Page */}
         <Route
           path="/converter"
