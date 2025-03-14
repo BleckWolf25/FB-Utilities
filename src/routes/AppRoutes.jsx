@@ -1,6 +1,7 @@
 // src/routes/AppRoutes.jsx
 import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { path } from 'framer-motion/client';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import Home from '../pages/Home';
@@ -15,7 +16,8 @@ import UnitsConverter from '../pages/UnitsConverter';
 import TimeZoneConverter from '../pages/TimeZoneConverter';
 import TimestampGenerator from '../pages/TimestampGenerator';
 import PasswordGenerator from '../pages/PasswordGenerator';
-import { path } from 'framer-motion/client';
+import Favicon from '../pages/Favicon';
+// import Currency from '../pages/Currency';
 
 // Layout wrapper component that includes navbar and footer
 const MainLayout = ({ children }) => {
@@ -80,6 +82,27 @@ const AppRoutes = () => {
           element={
             <MainLayout>
               <UnitsConverter />
+            </MainLayout>
+          }
+        />
+
+        {/* Currency Converter Page
+        <Route
+          path="/currency"
+          element={
+            <MainLayout>
+              <Currency />
+            </MainLayout>
+          }
+        />
+        */}
+
+        {/* Favicon Converter Page */}
+        <Route
+          path="/favicon"
+          element={
+            <MainLayout>
+              <Favicon />
             </MainLayout>
           }
         />

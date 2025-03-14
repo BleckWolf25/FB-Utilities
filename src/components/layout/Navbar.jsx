@@ -12,7 +12,7 @@ const Navbar = () => {
   const location = useLocation();
   const { isDark, toggleTheme } = useTheme();
   
-  // Updated navigation items with Unminifier added
+  // Navigation items
   const navItems = [
     {
       label: 'Home',
@@ -40,14 +40,16 @@ const Navbar = () => {
       hasDropdown: true,
       dropdownItems: [
         { label: 'File', to: '/converter' },
-        { label: 'Units', to: '/units' }
+        { label: 'Units', to: '/units' },
+        { label: 'Currency', to: '/currency' },
+        { label: 'Favicon', to: '/favicon' }
       ]
     },
     { 
       label: 'Math', 
       hasDropdown: true,
       dropdownItems: [
-        { label: 'Calculator', to: '/calculator' }
+        { label: 'Calculator', to: '/calculator' },
       ]
     },
     { 
@@ -67,10 +69,12 @@ const Navbar = () => {
 
   // Function to toggle a specific dropdown
   const handleDropdownToggle = (index) => {
+    
     // If clicked dropdown is already open, close it
     if (openDropdownIndex === index) {
       setOpenDropdownIndex(null);
     } else {
+      
       // Otherwise close the current one and open the clicked one
       setOpenDropdownIndex(index);
     }
