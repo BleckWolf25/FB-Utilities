@@ -460,7 +460,15 @@ const Minifier = () => {
             
             setTimeout(() => {
               if (originalIcon) {
-                copyBtn.innerHTML = originalIcon + ' ' + originalText.replace('Copied!', 'Copy to Clipboard');
+                // Clear current button content
+                copyBtn.innerHTML = '';
+                
+                // Add icon as HTML (assuming it's trusted static content)
+                copyBtn.innerHTML = originalIcon;
+                
+                // Append text content safely as a separate text node
+                const textNode = document.createTextNode(' ' + originalText.replace('Copied!', 'Copy to Clipboard'));
+                copyBtn.appendChild(textNode);
               } else {
                 copyBtn.textContent = originalText;
               }

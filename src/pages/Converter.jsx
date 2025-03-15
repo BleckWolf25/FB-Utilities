@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { FaFileUpload, FaFileDownload, FaExchangeAlt, FaCog, FaSearch } from 'react-icons/fa';
 import { saveAs } from 'file-saver';
 import { AnimatedElement, AnimateInView, StaggerContainer, fadeInVariants, scaleInVariants, slideInVariants } from '../components/animations/FadeIn';
@@ -52,6 +52,7 @@ const Converter = () => {
   const [selectedConverter, setSelectedConverter] = useState('image');
   const [useOcr, setUseOcr] = useState(false);
   const fileInputRef = useRef(null);
+  const [workerProgressMessage, setWorkerProgressMessage] = useState('');
 
   // Hooks
   const {
@@ -77,6 +78,13 @@ const Converter = () => {
   // Use worker for supported conversion types
   const imageWorker = useConversionWorker('image');
   const documentWorker = useConversionWorker('document');
+
+  // Monitor document worker progress messages
+  useEffect(() => {
+    if (documentWorker.progressMessage && isConverting) {
+      setWorkerProgressMessage(documentWorker.progressMessage);
+    }
+  }, [documentWorker.progressMessage, isConverting]);
 
   // Get the current converter configuration
   const currentConverter = converterOptions[selectedConverter];
@@ -123,12 +131,18 @@ const Converter = () => {
     try {
       setIsConverting(true);
       setError(null);
+      setWorkerProgressMessage('');
       
       let result = null;
       
       // For supported types, use workers for better performance
       if (selectedConverter === 'image' && 
           !(['gif'].includes(sourceFormat) && ['gif'].includes(targetFormat))) {
+        // Check if worker is initialized
+        if (!imageWorker.isInitialized) {
+          throw new Error('Image worker is not initialized. Please reload the page.');
+        }
+          
         // Most image conversions can use the worker
         const blob = await imageWorker.processFile(file, sourceFormat, targetFormat);
         const newFileName = fileName.replace(new RegExp(`\\.${sourceFormat}$`), `.${targetFormat}`);
@@ -144,9 +158,21 @@ const Converter = () => {
       else if (selectedConverter === 'document') {
         // Handle all document conversions through workers/main thread
         if ((sourceFormat === 'pdf' && (targetFormat === 'html' || targetFormat === 'md'))) {
-          const blob = await documentWorker.processFile(file, sourceFormat, targetFormat, { useOcr });
-          const newFileName = fileName.replace('.pdf', `.${targetFormat}`);
+          // Check if worker is initialized
+          if (!documentWorker.isInitialized) {
+            throw new Error('Document worker is not initialized. Please reload the page.');
+          }
           
+          setWorkerProgressMessage('Preparing document for conversion...');
+          
+          const blob = await documentWorker.processFile(
+            file, 
+            sourceFormat, 
+            targetFormat, 
+            { useOcr } // Pass OCR flag to worker
+          );
+          
+          const newFileName = fileName.replace(`.${sourceFormat}`, `.${targetFormat}`);
           const mimeType = targetFormat === 'md' ? 'text/markdown' : 'text/html';
           
           result = {
@@ -159,6 +185,10 @@ const Converter = () => {
           await convert('document');
           return;
         }
+      } else {
+        // For audio and video, use the main thread converter
+        await convert(selectedConverter);
+        return;
       }
       
       // Only set convertedFile if we got a result from worker processing
@@ -180,23 +210,29 @@ const Converter = () => {
     }
   };
 
-  // Add OCR option for documents
+  // Add OCR option for documents - improved version
   const renderOcrOption = () => {
     if (selectedConverter === 'document' && sourceFormat === 'pdf') {
       return (
-        <div className="ocr-option">
-          <label className="ocr-checkbox">
+        <div className="ocr-option bg-blue-50 dark:bg-blue-900/30 p-4 rounded-lg mb-6">
+          <label className="ocr-checkbox flex items-center mb-2">
             <input 
               type="checkbox" 
               checked={useOcr}
               onChange={(e) => setUseOcr(e.target.checked)} 
+              className="mr-2 h-4 w-4 text-indigo-600"
             />
-            <span>Use OCR for text extraction (recommended for scanned documents)</span>
+            <span className="text-gray-700 dark:text-gray-300">
+              Use OCR for text extraction (recommended for scanned documents)
+            </span>
           </label>
           {useOcr && (
-            <div className="ocr-info">
-              <FaSearch /> OCR will analyze the document's images and automatically extract the text.
-              This process may take longer depending on the document's size.
+            <div className="ocr-info bg-blue-100 dark:bg-blue-800/40 p-3 rounded flex items-start mt-2">
+              <FaSearch className="text-blue-600 dark:text-blue-400 mt-1 mr-2" />
+              <span className="text-sm text-blue-700 dark:text-blue-300">
+                OCR will analyze the document's images and automatically extract the text.
+                This process may take longer depending on the document's size.
+              </span>
             </div>
           )}
         </div>
@@ -389,6 +425,11 @@ const Converter = () => {
                       <p className="text-center mt-2 text-gray-600 dark:text-gray-400">
                         {conversionProgress}% complete
                       </p>
+                      {workerProgressMessage && (
+                        <p className="text-center mt-1 text-sm text-indigo-600 dark:text-indigo-400">
+                          {workerProgressMessage}
+                        </p>
+                      )}
                     </div>
                   </AnimatedElement>
                 )}

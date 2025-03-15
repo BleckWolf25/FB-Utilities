@@ -20,8 +20,12 @@ const minifyCSS = (content) => {
 };
 
 const minifyHTML = (content) => {
+  let previous;
+  do {
+    previous = content;
+    content = content.replace(/<!--[\s\S]*?-->/g, ''); // Remove HTML comments
+  } while (content !== previous);
   return content
-    .replace(/<!--[\s\S]*?-->/g, '') // Remove HTML comments
     .replace(/\s+/g, ' ') // Collapse whitespace
     .replace(/>\s+</g, '><') // Remove space between tags
     .trim();
@@ -37,6 +41,11 @@ const minifyJSON = (content) => {
 };
 
 const minifyXML = (content) => {
+  // Simple sanitization - block common XXE patterns
+  if (content.includes("<!ENTITY") || content.includes("<!DOCTYPE")) {
+    throw new Error("XML with DOCTYPE or ENTITY declarations cannot be minified due to security concerns");
+  }
+  
   return content
     .replace(/<!--[\s\S]*?-->/g, '') // Remove XML comments
     .replace(/>\s+</g, '><') // Remove space between tags

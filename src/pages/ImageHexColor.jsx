@@ -13,6 +13,8 @@ const ImageHexColor = () => {
   const [isSelecting, setIsSelecting] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [zoomColor, setZoomColor] = useState(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [copiedColorId, setCopiedColorId] = useState(null);
 
   // References
   const canvasRef = useRef(null);
@@ -38,6 +40,52 @@ const ImageHexColor = () => {
       setImagePreview(event.target.result);
     };
     reader.readAsDataURL(file);
+  };
+
+  // Handle drag and drop functionality
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!isDragging) {
+      setIsDragging(true);
+    }
+  };
+
+  const handleDragEnter = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      const file = e.dataTransfer.files[0];
+      
+      // Only accept image files
+      if (!file.type.match('image.*')) {
+        alert('Please select an image file.');
+        return;
+      }
+      
+      setImageFile(file);
+      
+      // Create image preview URL
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setImagePreview(event.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   // Handle image load to canvas
@@ -94,6 +142,25 @@ const ImageHexColor = () => {
     }
   };
 
+  // Fix for color copying function
+  const copyColorToClipboard = (colorCode) => {
+    const textArea = document.createElement('textarea');
+    textArea.value = colorCode;
+    document.body.appendChild(textArea);
+    textArea.select();
+    
+    try {
+      document.execCommand('copy');
+      // Show brief visual feedback that color was copied
+      setIsSelecting(true);
+      setTimeout(() => setIsSelecting(false), 500);
+    } catch (err) {
+      console.error('Failed to copy color code:', err);
+    }
+    
+    document.body.removeChild(textArea);
+  };
+
   // Handle color selection
   const handleCanvasClick = (e) => {
     if (!canvasRef.current || !zoomColor) return;
@@ -114,16 +181,8 @@ const ImageHexColor = () => {
       return updatedHistory.slice(0, 10);
     });
     
-    // Copy hex code to clipboard
-    navigator.clipboard.writeText(zoomColor.hex)
-      .then(() => {
-        // Show brief visual feedback that color was copied
-        setIsSelecting(true);
-        setTimeout(() => setIsSelecting(false), 500);
-      })
-      .catch(err => {
-        console.error('Failed to copy color code:', err);
-      });
+    // Copy hex code to clipboard using the fallback method
+    copyColorToClipboard(zoomColor.hex);
   };
 
   // Convert RGB to hex
@@ -215,10 +274,34 @@ const ImageHexColor = () => {
                       <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg mb-6">
                         {/* Image Upload Section */}
                         {!imagePreview && (
-                          <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center">
-                            <FaImage className="mx-auto text-gray-400 dark:text-gray-500 mb-3" size={40} />
-                            <p className="text-gray-600 dark:text-gray-400 mb-4">
-                              Upload an image to start picking colors
+                          <div 
+                            className={`border-2 border-dashed rounded-lg p-8 text-center transition-all duration-200 ${
+                              isDragging 
+                                ? 'border-indigo-400 bg-indigo-50 dark:border-indigo-500 dark:bg-indigo-900/30 scale-102' 
+                                : 'border-gray-300 dark:border-gray-600'
+                            }`}
+                            onDragOver={handleDragOver}
+                            onDragEnter={handleDragEnter}
+                            onDragLeave={handleDragLeave}
+                            onDrop={handleDrop}
+                          >
+                            <FaImage 
+                              className={`mx-auto mb-3 transition-all duration-200 ${
+                                isDragging 
+                                  ? 'text-indigo-500 dark:text-indigo-400 scale-110' 
+                                  : 'text-gray-400 dark:text-gray-500'
+                              }`} 
+                              size={40} 
+                            />
+                            <p className={`mb-4 transition-colors duration-200 ${
+                              isDragging 
+                                ? 'text-indigo-600 dark:text-indigo-400 font-medium' 
+                                : 'text-gray-600 dark:text-gray-400'
+                            }`}>
+                              {isDragging ? 'Drop image here!' : 'Upload an image to start picking colors'}
+                            </p>
+                            <p className="text-gray-500 dark:text-gray-400 mb-4 text-sm">
+                              Drag & drop an image here or
                             </p>
                             <input
                               type="file"
@@ -342,11 +425,23 @@ const ImageHexColor = () => {
                                   </div>
                                   <div className="flex space-x-2">
                                     <button 
-                                      className="p-1 text-gray-500 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400"
-                                      onClick={() => navigator.clipboard.writeText(entry.hex)}
+                                      className={`p-1 rounded-full transition-all duration-200 ${
+                                        copiedColorId === entry.id 
+                                          ? 'bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 transform scale-110' 
+                                          : 'text-gray-500 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400'
+                                      }`}
+                                      onClick={() => {
+                                        copyColorToClipboard(entry.hex);
+                                        setCopiedColorId(entry.id);
+                                        setTimeout(() => setCopiedColorId(null), 800);
+                                      }}
                                       title="Copy hex code"
                                     >
-                                      <FaCode size={14} />
+                                      {copiedColorId === entry.id ? (
+                                        <span className="text-xs font-medium animate-pulse">Copied!</span>
+                                      ) : (
+                                        <FaCode size={14} />
+                                      )}
                                     </button>
                                     <button 
                                       className="p-1 text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400"
@@ -382,8 +477,8 @@ const ImageHexColor = () => {
                               activeTab === 'overview'
                                 ? 'border-b-2 border-indigo-600 text-indigo-600 dark:text-indigo-400 dark:border-indigo-400'
                                 : 'text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400'
-                            }`}
-                          >
+                            }`}ateInView>
+                          
                             <FaInfoCircle className="inline mr-1" /> Overview
                           </button>
                           <button

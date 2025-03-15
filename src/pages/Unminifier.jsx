@@ -462,9 +462,20 @@ const Unminifier = () => {
             
             setTimeout(() => {
               if (originalIcon) {
-                copyBtn.innerHTML = originalIcon + ' ' + originalText.replace('Copied!', 'Copy to Clipboard');
+                // Create a new span for text content
+                const textSpan = document.createElement('span');
+                textSpan.textContent = ' ' + originalText.replace('Copied!', 'Copy to Clipboard');
+                
+                // Clear current button content
+                copyBtn.innerHTML = '';
+                
+                // Add icon as HTML (assuming it's trusted static content)
+                copyBtn.innerHTML = originalIcon;
+                
+                // Append text content safely
+                copyBtn.appendChild(textSpan);
               } else {
-                copyBtn.textContent = originalText;
+                copyBtn.textContent = originalText.replace('Copied!', 'Copy to Clipboard');
               }
             }, 2000);
           }

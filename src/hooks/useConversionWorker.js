@@ -1,138 +1,148 @@
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 export const useConversionWorker = (workerType) => {
+  const [worker, setWorker] = useState(null);
+  const [isInitialized, setIsInitialized] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
   const [progressMessage, setProgressMessage] = useState('');
-  const [error, setError] = useState(null);
-  const workerRef = useRef(null);
+  const [initializationError, setInitializationError] = useState(null);
   
-  // Initialize worker only once
+  // Initialize worker on mount
   useEffect(() => {
-    // Skip if we already have a worker
-    if (workerRef.current) return;
-    
     let workerInstance;
     
-    switch (workerType) {
-      case 'image':
-        workerInstance = new Worker(new URL('../web_workers/imageConverter.worker.js', import.meta.url), { type: 'module' });
-        break;
-      case 'document':
-        // Create a classic worker (not a module worker) to support importScripts
-        workerInstance = new Worker(new URL('../web_workers/documentConverter.worker.js', import.meta.url), 
-          { type: 'classic' });
+    try {
+      if (workerType === 'image') {
+        workerInstance = new Worker(new URL('../web_workers/imageConverter.worker.js', import.meta.url));
+      } else if (workerType === 'document') {
+        workerInstance = new Worker(new URL('../web_workers/documentConverter.worker.js', import.meta.url));
+      }
+      
+      if (workerInstance) {
+        // Set up message event handler
+        workerInstance.onmessage = (e) => {
+          const { type, payload, message } = e.data;
+          
+          if (type === 'initialized') {
+            console.log(`${workerType} worker initialized successfully`);
+            setIsInitialized(true);
+          } else if (type === 'progress') {
+            setProgress(payload || 0);
+            if (message) setProgressMessage(message);
+          } else if (type === 'error') {
+            console.error(`${workerType} worker error:`, payload);
+            setInitializationError(payload);
+          }
+        };
         
-        // Initialize the worker with options
-        workerInstance.postMessage({
+        // Handle worker errors
+        workerInstance.onerror = (error) => {
+          console.error(`${workerType} worker error:`, error);
+          setInitializationError(`Failed to initialize ${workerType} worker: ${error.message}`);
+        };
+        
+        setWorker(workerInstance);
+        
+        // Initialize the worker with a timeout to ensure it responds
+        workerInstance.postMessage({ 
           type: 'init',
-          payload: {
-            useBundledPdfJs: true
+          payload: { enableOcr: workerType === 'document' } 
+        });
+        
+        // Set a timeout to check if the worker initialized properly
+        const initTimeout = setTimeout(() => {
+          if (!isInitialized) {
+            console.warn(`${workerType} worker failed to initialize within timeout`);
+            setInitializationError(`${workerType} worker initialization timed out`);
+          }
+        }, 5000);
+        
+        return () => {
+          clearTimeout(initTimeout);
+          if (workerInstance) {
+            workerInstance.terminate();
+          }
+        };
+      }
+    } catch (error) {
+      console.error(`Failed to create ${workerType} worker:`, error);
+      setInitializationError(`Failed to create ${workerType} worker: ${error.message}`);
+    }
+  }, [workerType]);
+
+  // Process file with worker
+  const processFile = useCallback(async (file, sourceFormat, targetFormat, options = {}) => {
+    // Check for initialization before proceeding
+    if (initializationError) {
+      throw new Error(`Worker initialization failed: ${initializationError}`);
+    }
+    
+    if (!worker) {
+      throw new Error('Worker not created');
+    }
+    
+    if (!isInitialized) {
+      // Try to wait a bit for initialization to complete
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      
+      if (!isInitialized) {
+        throw new Error('Worker not initialized. Please try again.');
+      }
+    }
+    
+    setIsProcessing(true);
+    setProgress(0);
+    setProgressMessage('Starting conversion process');
+    
+    try {
+      const result = await new Promise((resolve, reject) => {
+        const messageHandler = (e) => {
+          const { type, payload, message } = e.data;
+          
+          if (type === 'progress') {
+            setProgress(payload || 0);
+            if (message) setProgressMessage(message);
+          } else if (type === 'success') {
+            worker.removeEventListener('message', messageHandler);
+            resolve(payload);
+          } else if (type === 'error') {
+            worker.removeEventListener('message', messageHandler);
+            reject(new Error(payload || 'Conversion failed'));
+          }
+        };
+        
+        worker.addEventListener('message', messageHandler);
+        
+        // Set a timeout to prevent hanging conversions
+        const timeoutId = setTimeout(() => {
+          worker.removeEventListener('message', messageHandler);
+          reject(new Error('Conversion timed out'));
+        }, 120000); // 2 minutes timeout
+        
+        worker.postMessage({
+          type: 'convert',
+          payload: { 
+            file,
+            sourceFormat,
+            targetFormat,
+            ...options 
           }
         });
-        break;
-      default:
-        console.warn(`No worker defined for type: ${workerType}`);
-        return;
+      });
+      
+      return result;
+    } finally {
+      setIsProcessing(false);
     }
-    
-    // Setup message handler
-    workerInstance.onmessage = (event) => {
-      const { type, payload, message } = event.data;
-      
-      if (type === 'progress') {
-        setProgress(payload || 0);
-        if (message) setProgressMessage(message);
-      }
-      else if (type === 'error') {
-        setError(payload);
-        setIsProcessing(false);
-      }
-      else if (type === 'success') {
-        setIsProcessing(false);
-        setProgress(100);
-      }
-    };
-    
-    workerRef.current = workerInstance;
-    
-    // Cleanup worker on unmount
-    return () => {
-      workerRef.current?.terminate();
-      workerRef.current = null;
-    };
-  }, [workerType]);
-
-  /**
-   * Processes a file using a dedicated web worker
-   * @param {File} file - The file to process
-   * @param {string} sourceFormat - The source file format (e.g., 'jpg', 'png')
-   * @param {string} targetFormat - The target file format to convert to
-   * @param {Object} options - Additional conversion options
-   * @returns {Promise<Blob>} A promise that resolves to the converted file as a Blob
-   */
-  const processFile = useCallback((file, sourceFormat, targetFormat, options = {}) => {
-    if (!workerRef.current) {
-      return Promise.reject(new Error('Worker not initialized'));
-    }
-    
-    return new Promise((resolve, reject) => {
-      setIsProcessing(true);
-      setProgress(0);
-      setProgressMessage('Starting conversion...');
-      setError(null);
-      
-      const reader = new FileReader();
-      reader.onload = async (e) => {
-        try {
-          const arrayBuffer = e.target.result;
-          const worker = workerRef.current;
-          
-          // Setup one-time message handler for this conversion
-          const messageHandler = (event) => {
-            const { type, payload, message } = event.data;
-            
-            if (type === 'success') {
-              worker.removeEventListener('message', messageHandler);
-              resolve(payload);
-            }
-            else if (type === 'error') {
-              worker.removeEventListener('message', messageHandler);
-              reject(new Error(payload));
-            }
-            else if (type === 'progress') {
-              setProgress(payload || 0);
-              if (message) setProgressMessage(message);
-            }
-          };
-          
-          worker.addEventListener('message', messageHandler);
-          
-          // Send data to worker
-          worker.postMessage({
-            type: 'convert',
-            payload: {
-              file: new Blob([arrayBuffer], { type: file.type }),
-              sourceFormat,
-              targetFormat,
-              useOcr: options.useOcr || false
-            }
-          }, [arrayBuffer]);
-        } catch (error) {
-          reject(error);
-        }
-      };
-      
-      reader.onerror = () => reject(new Error('Failed to read file'));
-      reader.readAsArrayBuffer(file);
-    });
-  }, [workerType]);
-
+  }, [worker, isInitialized, initializationError]);
+  
   return {
-    processFile,
+    isInitialized,
     isProcessing,
     progress,
     progressMessage,
-    error
+    processFile,
+    error: initializationError
   };
 };

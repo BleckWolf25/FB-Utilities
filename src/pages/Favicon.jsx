@@ -15,6 +15,8 @@ const Favicon = () => {
   const [isConverting, setIsConverting] = useState(false);
   const [isGenerated, setIsGenerated] = useState(false);
   const [generatedFavicons, setGeneratedFavicons] = useState({});
+  const [isDragging, setIsDragging] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
   const fileInputRef = useRef(null);
 
   // Handle file selection
@@ -190,6 +192,109 @@ const Favicon = () => {
     return code;
   };
 
+  const copyHtmlCode = () => {
+    const code = generateFaviconCode();
+    
+    // Use clipboard API with fallback
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(code)
+        .then(() => {
+          setIsCopied(true);
+          setTimeout(() => setIsCopied(false), 2000);
+        })
+        .catch(err => {
+          console.error('Failed to copy text: ', err);
+          fallbackCopyTextToClipboard(code);
+        });
+    } else {
+      fallbackCopyTextToClipboard(code);
+    }
+  };
+
+  // Fallback method for browsers that don't support clipboard API
+  const fallbackCopyTextToClipboard = (text) => {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    
+    // Make the textarea out of viewport
+    textArea.style.position = "fixed";
+    textArea.style.left = "-999999px";
+    textArea.style.top = "-999999px";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+
+    try {
+      const successful = document.execCommand('copy');
+      if (successful) {
+        setIsCopied(true);
+        setTimeout(() => setIsCopied(false), 2000);
+      }
+    } catch (err) {
+      console.error('Failed to copy', err);
+    }
+
+    document.body.removeChild(textArea);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!isDragging) {
+      setIsDragging(true);
+    }
+  };
+
+  const handleDragEnter = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    
+    const file = e.dataTransfer.files[0];
+    if (!file) return;
+  
+    // Reset states
+    setErrorMessage('');
+    setIsGenerated(false);
+    setGeneratedFavicons({});
+    
+    // Check if file is an image (PNG or JPG)
+    if (!file.type.match('image/(jpeg|png|jpg)')) {
+      setErrorMessage('Please select a PNG or JPG image file.');
+      setSelectedFile(null);
+      setPreviewSrc('');
+      return;
+    }
+  
+    // Check file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setErrorMessage('File size should be less than 5MB.');
+      setSelectedFile(null);
+      setPreviewSrc('');
+      return;
+    }
+  
+    // Create and set preview
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreviewSrc(reader.result);
+      setSelectedFile(file);
+    };
+    reader.readAsDataURL(file);
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900 pt-20">
       <div className="container mx-auto px-4 py-8">
@@ -235,7 +340,15 @@ const Favicon = () => {
                           <div className="flex items-center justify-center w-full">
                             <label 
                               htmlFor="image-upload" 
-                              className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-lg cursor-pointer bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                              className={`flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer transition-all duration-200 ${
+                                isDragging 
+                                  ? 'border-indigo-400 bg-indigo-50 dark:border-indigo-500 dark:bg-indigo-900/30' 
+                                  : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700'
+                              }`}
+                              onDragOver={handleDragOver}
+                              onDragEnter={handleDragEnter}
+                              onDragLeave={handleDragLeave}
+                              onDrop={handleDrop}
                             >
                               {previewSrc ? (
                                 <div className="flex flex-col items-center justify-center h-full w-full">
@@ -250,9 +363,17 @@ const Favicon = () => {
                                 </div>
                               ) : (
                                 <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                  <FaUpload className="w-8 h-8 mb-3 text-gray-400" />
-                                  <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                                    <span className="font-semibold">Click to upload</span> or drag and drop
+                                  <FaUpload className={`w-8 h-8 mb-3 ${
+                                    isDragging 
+                                      ? 'text-indigo-500 dark:text-indigo-400' 
+                                      : 'text-gray-400'
+                                  } transition-colors`} />
+                                  <p className={`mb-2 text-sm ${
+                                    isDragging 
+                                      ? 'text-indigo-600 dark:text-indigo-400 font-medium' 
+                                      : 'text-gray-500 dark:text-gray-400'
+                                  } transition-colors`}>
+                                    {isDragging ? 'Drop file here' : <span><span className="font-semibold">Click to upload</span> or drag and drop</span>}
                                   </p>
                                   <p className="text-xs text-gray-500 dark:text-gray-400">
                                     PNG or JPG (MAX. 5MB)
@@ -364,10 +485,14 @@ const Favicon = () => {
                               <div className="flex justify-between items-center text-white mb-2">
                                 <span className="text-xs font-medium">HTML Implementation</span>
                                 <button 
-                                  onClick={() => navigator.clipboard.writeText(generateFaviconCode())}
-                                  className="text-xs bg-gray-700 hover:bg-gray-600 py-1 px-2 rounded"
+                                  onClick={copyHtmlCode}
+                                  className={`text-xs py-1 px-2 rounded transition-colors ${
+                                    isCopied 
+                                      ? 'bg-green-600 hover:bg-green-700' 
+                                      : 'bg-gray-700 hover:bg-gray-600'
+                                  }`}
                                 >
-                                  Copy
+                                  {isCopied ? 'Copied!' : 'Copy'}
                                 </button>
                               </div>
                               <pre className="text-green-400 text-xs whitespace-pre-wrap">

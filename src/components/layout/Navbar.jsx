@@ -30,7 +30,7 @@ const Navbar = () => {
       label: 'Media', 
       hasDropdown: true,
       dropdownItems: [
-        { label: 'Image Color Picker', to: '/imagehexcolor' },
+        { label: 'Image Color Picker', to: '/image-color-picker' },
       ]
     },
     { 
@@ -49,7 +49,9 @@ const Navbar = () => {
         { label: 'File', to: '/converter' },
         { label: 'Units', to: '/units' },
         { label: 'Currency', to: '/currency' },
-        { label: 'Favicon', to: '/favicon' }
+        { label: 'Favicon', to: '/favicon' },
+        { label: 'Text Case', to: '/text-case' },
+        { label: 'CSV to Tables', to: '/csv-to-table' }
       ]
     },
     { 
@@ -63,7 +65,7 @@ const Navbar = () => {
       label: 'Security', 
       hasDropdown: true,
       dropdownItems: [
-        { label: 'Password Generator', to: '/passwordgenerator' }
+        { label: 'Password Generator', to: '/password-generator' }
       ]
     },
   ];

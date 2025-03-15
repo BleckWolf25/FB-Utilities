@@ -31,10 +31,14 @@ const PasswordGenerator = () => {
       alert('Please select at least one character set for your password');
       return;
     }
+
+    // Generate random password
+    const randomValues = new Uint32Array(length);
+    window.crypto.getRandomValues(randomValues);
     
     // Generate random password
     for (let i = 0; i < length; i++) {
-      const randomIndex = Math.floor(Math.random() * charset.length);
+      const randomIndex = randomValues[i] % charset.length;
       newPassword += charset[randomIndex];
     }
     

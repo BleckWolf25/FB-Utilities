@@ -17,10 +17,12 @@ import TimeZoneConverter from '../pages/TimeZoneConverter';
 import TimestampGenerator from '../pages/TimestampGenerator';
 import PasswordGenerator from '../pages/PasswordGenerator';
 import Favicon from '../pages/Favicon';
-// import Currency from '../pages/Currency';
+import Currency from '../pages/Currency';
 import ImageHexColor from '../pages/ImageHexColor';
 import TermsOfService from '../pages/TermsOfService';
 import PrivacyPolicy from '../pages/PrivacyPolicy';
+import TextCaseConverter from '../pages/TextCaseConverter';
+import CSVConverter from '../pages/CsvTable';
 
 // Layout wrapper component that includes navbar and footer
 const MainLayout = ({ children }) => {
@@ -108,7 +110,7 @@ const AppRoutes = () => {
           }
         />
 
-        {/* Currency Converter Page
+        {/* Currency Converter Page */}
         <Route
           path="/currency"
           element={
@@ -117,7 +119,7 @@ const AppRoutes = () => {
             </MainLayout>
           }
         />
-        */}
+
 
         {/* Favicon Converter Page */}
         <Route
@@ -129,9 +131,29 @@ const AppRoutes = () => {
           }
         />
 
+        {/* Favicon Converter Page */}
+        <Route
+          path="/text-case"
+          element={
+            <MainLayout>
+              <TextCaseConverter />
+            </MainLayout>
+          }
+        />
+
+        {/* Csv to Table Converter Page */}
+        <Route
+          path="/csv-to-table"
+          element={
+            <MainLayout>
+              <CSVConverter />
+            </MainLayout>
+          }
+        />
+
         {/* Currency Converter Page */}
         <Route
-          path="/imagehexcolor"
+          path="/image-color-picker"
           element={
             <MainLayout>
               <ImageHexColor />
@@ -202,7 +224,7 @@ const AppRoutes = () => {
 
         {/* Random Password Generator Page */}
         <Route
-          path="/passwordgenerator"
+          path="/password-generator"
           element={
             <MainLayout>
               <PasswordGenerator />
