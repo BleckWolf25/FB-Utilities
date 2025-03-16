@@ -191,9 +191,9 @@ const Home = () => {
               }}
             >
               <VideoPlayer 
-                src="https://firebasestorage.googleapis.com/v0/b/gitconnected.appspot.com/o/demo-video.mp4?alt=media"
-                poster="/path/to/poster-image.jpg"
-                autoPlay={false}
+                src="../videos/Home_VideoPlayer.mp4"
+                poster="../images/Poster_Home_VideoPlayer.png"
+                autoPlay={true}
                 controls={true}
                 className="w-full aspect-video shadow-xl rounded-lg"
               />
